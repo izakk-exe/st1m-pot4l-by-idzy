@@ -1,28 +1,28 @@
-# Contribuer / Contributing
+# Contributing
 
-Tout le contenu communautaire est dans **`src/data/community.json`** — une pull request suffit, aucune ligne de code à écrire.
+All community content lives in **`src/data/community.json`** — a pull request is enough, no code to write.
 
-## Statut d'une technique (par saison)
+## Technique status (per season)
 ```json
-"statuses": { "superglide": { "s": "ok", "season": "S27", "note": "Vérifié en jeu" } }
+"statuses": { "superglide": { "s": "ok", "season": "S27", "note": "Verified in game" } }
 ```
-`s` = `ok` | `patched` | `broken`. Les identifiants (`superglide`, `tap-strafe`…) sont ceux du catalogue de l'app
-(dans `src/data/catalog.js`, 1re colonne).
+`s` = `ok` | `patched` | `broken`. IDs (`superglide`, `tap-strafe`…) are the ones used by the in-app catalogue
+(see `src/data/catalog.js`, first column).
 
-## Vidéos
+## Videos
 ```json
-"videos": { "tap-strafe": [ { "t": "Tap strafe en 5 minutes", "u": "https://www.youtube.com/watch?v=XXXX", "by": "Pseudo" } ] }
+"videos": { "tap-strafe": [ { "t": "Tap strafe in 5 minutes", "u": "https://www.youtube.com/watch?v=XXXX", "by": "Nickname" } ] }
 ```
-Seuls les liens `https` vers YouTube, Twitch, apexmovement.tech et GitHub sont acceptés par l'app.
+The app only accepts `https` links to YouTube, Twitch, apexmovement.tech and GitHub.
 
-## Actus
+## News
 ```json
-"news": [ { "d": "2026-10-06", "t": "Titre", "b": "Texte court", "u": "https://…" } ]
+"news": [ { "d": "2026-10-06", "t": "Title", "b": "Short text", "u": "https://…" } ]
 ```
 
-## Résumés de techniques
-Ajoute une entrée dans `ST.TECH_INFO` (`src/data/hub-content.js`) avec un texte **original** (ne copie pas le wiki) : `fr`, `en`, `acts`, `pre`.
+## Technique summaries
+Add an entry to `ST.TECH_INFO` (`src/data/hub-content.js`) with an **original** text (don't copy the wiki): `fr`, `en`, `acts`, `pre`.
 
-## Règles
-- Les outils d'entraînement et l'overlay **mesurent** uniquement : pas de macro, pas d'automatisation d'inputs.
-- Cite tes sources et renvoie vers le wiki pour les guides détaillés.
+## Rules
+- The training tools and the overlay **only measure**: no macros, no input automation.
+- Credit your sources and link to the wiki for detailed guides.

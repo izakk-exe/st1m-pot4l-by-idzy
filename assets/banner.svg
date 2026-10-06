@@ -77,6 +77,6 @@
     <animate attributeName="opacity" values=".5;1;.5" dur="3s" repeatCount="indefinite"/>
   </rect>
   <text class="sub" x="324" y="238" font-size="23" fill="#f5c542">BY IDZY</text>
-  <text class="tag" x="324" y="282" font-size="22" fill="#e8e2d0">Apex Legends config editor  ·  Movement Lab  ·  Overlay clavier &amp; souris</text>
-  <text class="tag" x="324" y="314" font-size="17" fill="#a39e90">FOV 120 · setup en 1 clic · tap strafe · Superglide Trainer · avant/après · 100 % gratuit</text>
+  <text class="tag" x="324" y="282" font-size="22" fill="#e8e2d0">Apex Legends config editor  ·  Movement Lab  ·  Keyboard &amp; mouse overlay</text>
+  <text class="tag" x="324" y="314" font-size="17" fill="#a39e90">FOV 120 · one-click setup · tap strafe · Superglide Trainer · before/after · 100% free</text>
 </svg>

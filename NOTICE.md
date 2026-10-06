@@ -1,13 +1,13 @@
-# Crédits / Credits
+# Credits
 
 - **Config Editor for Apex Legends** (https://codeberg.org/configeditor/config-editor) — MIT License, Copyright (c) 2026 Config Editor.
-  ST1M POT4L s'en inspire (fonctionnalités, valeurs des réglages et presets) et réutilise ses images de comparaison
-  `src/previews/*.webp` conformément à la licence MIT ci-dessous.
-- **Apex Movement Wiki** (https://apexmovement.tech) — le *Movement Lab* utilise l'index de son catalogue (noms des techniques, niveaux de difficulté,
-  liens) et renvoie vers ses guides pour le détail et les vidéos. Les résumés de l'app sont des textes originaux. Le wiki autorise la réutilisation
-  non commerciale ; ST1M POT4L est gratuit et non commercial. Merci à ses auteurs et contributeurs. Projet non affilié.
-- Apex Legends est une marque et une œuvre d'Electronic Arts / Respawn Entertainment. Les captures d'écran du jeu
-  restent la propriété de leurs ayants droit. Projet communautaire non affilié.
+  ST1M POT4L is inspired by it (features, setting values and presets) and reuses its comparison images
+  `src/previews/*.webp` under the MIT license below.
+- **Apex Movement Wiki** (https://apexmovement.tech) — the *Movement Lab* uses the index of its catalogue (technique names,
+  difficulty levels, links) and links back to its guides for details and videos. The in-app summaries are original texts. The wiki
+  allows non-commercial reuse; ST1M POT4L is free and non-commercial. Thanks to its authors and contributors. Not affiliated.
+- Apex Legends is a trademark and work of Electronic Arts / Respawn Entertainment. Game screenshots remain the property of
+  their respective owners. Community project, not affiliated.
 
 ---
 MIT License
