@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "updated": "2026-10-06",
+  "season": "",
+  "_help": "Fichier alimenté par la communauté via pull requests. statuses: { \"<id technique>\": { \"s\": \"ok|patched|broken\", \"season\": \"S27\", \"note\": \"...\" } }. videos: { \"<id technique>\": [ { \"t\": \"Titre\", \"u\": \"https://www.youtube.com/watch?v=...\", \"by\": \"Pseudo\" } ] }. Les ids sont ceux affichés dans l'app (ex: superglide, tap-strafe).",
+  "statuses": {},
+  "videos": {},
+  "guides": [
+    { "t": "Apex Movement Wiki — le catalogue complet des techniques", "u": "https://apexmovement.tech/wiki/catalog", "by": "Apex Movement Wiki" },
+    { "t": "Apex Movement Wiki — articles : réglages, matériel, entraînement", "u": "https://apexmovement.tech/wiki/articles", "by": "Apex Movement Wiki" }
+  ],
+  "news": [
+    { "d": "2026-10-06", "t": "Movement Lab : catalogue, parcours et entraîneurs", "b": "Le catalogue de plus de 280 techniques (avec tes propres touches), le parcours de progression, les fiches légendes et le quiz, le Superglide Trainer et les entraîneurs de rythme arrivent dans ST1M POT4L." },
+    { "d": "2026-10-06", "t": "Packs de binds et overlay mouvement", "b": "Des packs de binds en un clic pour les techniques (tap strafe, scroll jump, superglide) et un overlay qui affiche saut, accroupi et molette." }
+  ]
+}

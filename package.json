@@ -1,0 +1,59 @@
+{
+  "name": "st1m-pot4l",
+  "productName": "ST1M POT4L",
+  "version": "1.1.0",
+  "description": "ST1M POT4L by idZy Ã¢â‚¬â€ Apex Legends config editor: hidden settings, one-click setup, tap strafe binds.",
+  "author": "idZy",
+  "license": "MIT",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "web": "python -m http.server 8765 --directory src",
+    "dist": "electron-builder --win --publish never"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.idzy.st1mpot4l",
+    "productName": "ST1M POT4L",
+    "files": [
+      "electron/**",
+      "src/**",
+      "assets/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "ST1M POT4L",
+      "artifactName": "ST1M-POT4L-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "ST1M-POT4L-Portable-${version}.${ext}"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "izakk-exe",
+        "repo": "st1m-pot4l-by-idzy"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/izakk-exe/st1m-pot4l-by-idzy.git"
+  },
+  "homepage": "https://github.com/izakk-exe/st1m-pot4l-by-idzy"
+}

@@ -1,0 +1,19 @@
+/* Fully transparent: only keys + ring are drawn. */
+html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; user-select: none; font-family: Bahnschrift, "Segoe UI", system-ui, sans-serif; }
+body { --accent: #7cff3a; --k: 52px; }
+#stage { position: absolute; left: 0; top: 0; width: 380px; height: 380px; transform-origin: 0 0; }
+#ring { position: absolute; inset: 0; }
+#keys { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.row { display: flex; gap: 6px; justify-content: center; }
+.key { box-sizing: border-box; min-width: var(--k); height: var(--k); padding: 0 8px; display: grid; place-items: center; border-radius: 9px; border: 2px solid color-mix(in srgb, var(--accent) 38%, transparent); color: color-mix(in srgb, var(--accent) 80%, #fff); font-weight: 700; font-size: 17px; letter-spacing: .04em; transition: background .06s, box-shadow .06s, border-color .06s, color .06s; }
+.key.w2 { min-width: calc(var(--k) * 1.6); }
+.key.w3 { min-width: calc(var(--k) * 2.2); }
+.key.on { background: color-mix(in srgb, var(--accent) 38%, transparent); border-color: var(--accent); color: #fff; }
+body.glow .key.on { box-shadow: 0 0 14px var(--accent), inset 0 0 12px color-mix(in srgb, var(--accent) 55%, transparent); }
+body.glow .key { text-shadow: 0 0 6px color-mix(in srgb, var(--accent) 70%, transparent); }
+.hidden { display: none !important; }
+
+#tl { position: absolute; left: 20px; top: 386px; width: 340px; height: 84px; }
+.key.wheel { gap: 8px; display: flex; align-items: center; justify-content: center; min-width: calc(var(--k) * 2.6); }
+.key.wheel .ar { font-size: 15px; opacity: .35; transition: opacity .05s; } .key.wheel .ar.on { opacity: 1; text-shadow: 0 0 8px var(--accent); }
+.key.wheel .cnt { font-size: 14px; min-width: 44px; text-align: center; }
