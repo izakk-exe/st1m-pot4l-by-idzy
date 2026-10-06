@@ -233,6 +233,14 @@
   }
 
   // ------------------------------------------------------------------ news / updates
+  // only a Ko-fi https link is ever rendered as the support button
+  function donateUrl() { try { const u = new URL((ST.CONFIG && ST.CONFIG.donate) || ''); return u.protocol === 'https:' && /(^|\.)ko-fi\.com$/.test(u.hostname) ? u.href : ''; } catch (e) { return ''; } }
+  ST.donateUrl = donateUrl;
+  function supportCard() {
+    const u = donateUrl(); if (!u) return '';
+    return `<h2>${L('Soutenir le projet', 'Support the project')}</h2><div class="card pad support"><p class="lead" style="margin:0 0 14px">${L("ST1M PORT4L est gratuit et sans pub. Si l'outil t'est utile, un petit café aide à financer le certificat de signature Windows (fin de l'alerte à l'installation) et les prochaines fonctions.", 'ST1M PORT4L is free and ad-free. If it is useful to you, a coffee helps pay for the Windows code-signing certificate (no more warning at install) and upcoming features.')}</p>
+      <a class="btn gold" href="${esc(u)}" target="_blank" rel="noopener noreferrer">☕ ${L('Soutenir sur Ko-fi', 'Support on Ko-fi')}</a></div>`;
+  }
   function pageNews() {
     const c = community, repo = ST.CONFIG && ST.CONFIG.repo;
     const upd = window.stApi && window.stApi.updateCheck;
@@ -241,6 +249,7 @@
         <div class="ctl"><button class="btn sm" data-h="refresh">${L('Actualiser le contenu', 'Refresh content')}</button><button class="btn sm gold" data-h="update"${upd ? '' : ' disabled'}>${L('Vérifier les mises à jour', 'Check for updates')}</button></div></div>
         ${repo ? '' : `<p class="hint" style="margin-top:10px">${L('Dépôt GitHub non configuré : renseigne-le dans <code>src/js/config.js</code> pour activer les mises à jour et l\'actualisation en ligne.', 'GitHub repo not configured: set it in <code>src/js/config.js</code> to enable updates and online refresh.')}</p>`}
         <div id="upd-status" class="hint"></div></div>
+      ${supportCard()}
       <h2>${L('Actus', 'News')}</h2>${c.news.length ? c.news.map((n) => `<div class="card pad news"><span class="tag">${esc(n.d)}</span><h3>${esc(n.t)}</h3><p>${esc(n.b)}</p>${n.u ? `<a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${L('En savoir plus ↗', 'Read more ↗')}</a>` : ''}</div>`).join('') : `<p class="lead">${L('Rien pour le moment.', 'Nothing yet.')}</p>`}
       <h2>${L('Guides & liens', 'Guides & links')}</h2><div class="card pad">${c.guides.map((v) => `<div class="vid"><a href="${esc(v.u)}" target="_blank" rel="noopener noreferrer">↗ ${esc(v.t)}</a><span class="tag">${esc(v.by)}</span></div>`).join('') || '—'}</div>
       <h2>${L('Contribuer', 'Contribute')}</h2><div class="card pad"><p class="lead" style="margin:0">${L('Statuts par saison, vidéos et actus se mettent à jour via <code>src/data/community.json</code> dans le dépôt GitHub (pull request). Voir CONTRIBUTING.md.', 'Per-season statuses, videos and news are updated through <code>src/data/community.json</code> in the GitHub repo (pull request). See CONTRIBUTING.md.')}</p></div>

@@ -12,6 +12,7 @@
 <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-f5c542?style=flat-square&labelColor=0a0a0a" alt="Windows">
 <img src="https://img.shields.io/badge/license-MIT-f5c542?style=flat-square&labelColor=0a0a0a" alt="MIT">
 <img src="https://img.shields.io/badge/100%25-free-f5c542?style=flat-square&labelColor=0a0a0a" alt="free">
+<a href="https://ko-fi.com/idzyy"><img src="https://img.shields.io/badge/%E2%98%95%20Support%20me-Ko--fi-f5c542?style=flat-square&labelColor=0a0a0a" alt="Support on Ko-fi"></a>
 
 <br><br>
 
@@ -112,6 +113,17 @@ Tap strafe (wheel up/down = forward), scroll jump, superglide… Every key trigg
 - **The trainers measure; they never send anything to the game.**
 
 > ⚠️ Community project, **not affiliated with EA / Respawn**. Editing config files is at your own risk. The app injects nothing into the game, but **no guarantee regarding EasyAntiCheat can be given**.
+
+---
+
+## ☕ Support the project
+
+ST1M PORT4L is **free and ad-free**, and it will stay that way. If it helps you, you can support its development on **[Ko-fi](https://ko-fi.com/idzyy)**.
+The current goal: a **Windows code-signing certificate** so the app installs without the "Windows protected your PC" warning. Anything beyond that goes to new features (leaderboards, weekly challenges, more movement guides).
+
+<p align="center"><a href="https://ko-fi.com/idzyy"><img src="https://img.shields.io/badge/%E2%98%95%20Support%20on%20Ko--fi-f5c542?style=for-the-badge&labelColor=000000" alt="Support on Ko-fi"></a></p>
+
+Not into donating? Starring the repo ⭐ and sharing it with your squad helps just as much.
 
 ---
 

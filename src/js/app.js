@@ -504,7 +504,7 @@
   function renderSide() {
     $('#side').innerHTML = `<div class="brand">${LOGO}<div><b>ST1M PORT4L</b><small>by idZy</small></div></div>` +
       ST.TABS.map((t, i) => (i > 0 && t.sec !== ST.TABS[i - 1].sec && ST.SECTIONS[t.sec] ? `<div class="navsec">${ST.SECTIONS[t.sec][0]}</div>` : '') + `<button class="nav${S.tab === t.id ? ' on' : ''}" data-act="tab" data-v="${t.id}"><i>${t.icon}</i><span>${esc(tabLabel(t))}</span>${tabHasChanges(t.id) ? '<span class="dot"></span>' : ''}</button>`).join('') +
-      `<div class="side-foot">${L('Ferme Apex avant d\'appliquer.', 'Close Apex before applying.')}<br>MIT · idZy</div>`;
+      `<div class="side-foot">${L('Ferme Apex avant d\'appliquer.', 'Close Apex before applying.')}<br>MIT · idZy${ST.donateUrl && ST.donateUrl() ? ` · <a href="${esc(ST.donateUrl())}" target="_blank" rel="noopener noreferrer">☕ ${L('Soutenir', 'Support')}</a>` : ''}</div>`;
   }
   function renderTop() {
     $('#top').innerHTML = `<div class="search" data-act="palette">🔎 <span>${L('Rechercher un réglage ou une action…', 'Search a setting or action…')}</span><span class="kbd">Ctrl K</span></div><span class="spacer"></span><button class="btn gold sm" data-act="launch">▶ ${L('Lancer Apex', 'Launch Apex')}</button>
