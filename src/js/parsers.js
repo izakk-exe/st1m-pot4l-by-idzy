@@ -1,4 +1,4 @@
-/* ST1M POT4L — readers/writers for videoconfig.txt, profile.cfg, settings.cfg */
+/* ST1M PORT4L — readers/writers for videoconfig.txt, profile.cfg, settings.cfg */
 (function () {
   const ST = (window.ST = window.ST || {});
 

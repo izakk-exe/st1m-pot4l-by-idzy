@@ -1,4 +1,4 @@
-/* ST1M POT4L — settings previews.
+/* ST1M PORT4L — settings previews.
  * A small procedural "arena" scene (original artwork, NOT game screenshots) that reacts to the settings,
  * plus a drag-to-compare widget. Users can override any preview with real screenshots:
  *   src/previews/<settingId>_<value>.jpg   (e.g. csm_enabled_0.jpg + csm_enabled_1.jpg) */

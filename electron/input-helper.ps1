@@ -1,4 +1,4 @@
-# ST1M POT4L — passive input helper for the keyboard/mouse overlay.
+# ST1M PORT4L — passive input helper for the keyboard/mouse overlay.
 # Reads Windows Raw Input (same mechanism OBS input overlays use). It only reports:
 #   K <vk> <1|0>   W A S D, Shift, Ctrl, Space, C   (every other key is ignored and never leaves this process)
 #   B <1..5> <1|0>  mouse buttons

@@ -1,4 +1,4 @@
-/* ST1M POT4L — keyboard / mouse overlay renderer.
+/* ST1M PORT4L — keyboard / mouse overlay renderer.
  * Input arrives as {t:'K',vk,down} | {t:'M',dx,dy} | {t:'B',b,down} from the Electron main process
  * (or via postMessage when shown as a live preview inside the app). */
 (function () {

@@ -1,4 +1,4 @@
-/* ST1M POT4L — Movement Lab: technique catalogue, learning path, legends, quiz, news.
+/* ST1M PORT4L — Movement Lab: technique catalogue, learning path, legends, quiz, news.
  * Technique index (names / difficulty / links) comes from the Apex Movement Wiki catalog; every entry links back to it. */
 (function () {
   const ST = (window.ST = window.ST || {});
@@ -236,8 +236,8 @@
   function pageNews() {
     const c = community, repo = ST.CONFIG && ST.CONFIG.repo;
     const upd = window.stApi && window.stApi.updateCheck;
-    return `<div class="page">${title(L('Actus & mises à jour', 'News & updates'), L('Nouveautés de ST1M POT4L et de la communauté.', 'News from ST1M POT4L and the community.'))}
-      <div class="card pad"><div class="set" style="border:0;padding:0"><div><h4>ST1M POT4L v${esc(ST.VERSION || '')}</h4><p>${L('Contenu communautaire du', 'Community content from')} ${esc(c.updated || '—')}${c.season ? ' · ' + L('saison', 'season') + ' ' + esc(c.season) : ''}</p></div>
+    return `<div class="page">${title(L('Actus & mises à jour', 'News & updates'), L('Nouveautés de ST1M PORT4L et de la communauté.', 'News from ST1M PORT4L and the community.'))}
+      <div class="card pad"><div class="set" style="border:0;padding:0"><div><h4>ST1M PORT4L v${esc(ST.VERSION || '')}</h4><p>${L('Contenu communautaire du', 'Community content from')} ${esc(c.updated || '—')}${c.season ? ' · ' + L('saison', 'season') + ' ' + esc(c.season) : ''}</p></div>
         <div class="ctl"><button class="btn sm" data-h="refresh">${L('Actualiser le contenu', 'Refresh content')}</button><button class="btn sm gold" data-h="update"${upd ? '' : ' disabled'}>${L('Vérifier les mises à jour', 'Check for updates')}</button></div></div>
         ${repo ? '' : `<p class="hint" style="margin-top:10px">${L('Dépôt GitHub non configuré : renseigne-le dans <code>src/js/config.js</code> pour activer les mises à jour et l\'actualisation en ligne.', 'GitHub repo not configured: set it in <code>src/js/config.js</code> to enable updates and online refresh.')}</p>`}
         <div id="upd-status" class="hint"></div></div>

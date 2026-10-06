@@ -1,4 +1,4 @@
-/* ST1M POT4L — animated blurred background (original artwork: drifting stars + black-hole accretion disk,
+/* ST1M PORT4L — animated blurred background (original artwork: drifting stars + black-hole accretion disk,
  * a nod to the Apex universe). Modes: 'hole' (animated), 'image' (user-supplied image, blurred), 'off'. */
 (function () {
   const ST = (window.ST = window.ST || {});

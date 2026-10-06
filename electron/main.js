@@ -1,4 +1,4 @@
-// ST1M POT4L by idZy — Electron main process
+// ST1M PORT4L by idZy — Electron main process
 const { app, BrowserWindow, ipcMain, dialog, shell, Menu, Tray, screen, globalShortcut, nativeImage } = require('electron');
 const fs = require('fs');
 const os = require('os');
@@ -158,11 +158,11 @@ async function checkForUpdate(lang, silent) {
   try {
     const r = await autoUpdater.checkForUpdates();
     const v = r && r.updateInfo && r.updateInfo.version;
-    if (!v || v === app.getVersion()) return { message: T2(lang, `Tu as la dernière version (${app.getVersion()}).`, `You are up to date (${app.getVersion()}).`) };
-    const ask = await dialog.showMessageBox(win, { type: 'info', buttons: [T2(lang, 'Télécharger', 'Download'), T2(lang, 'Plus tard', 'Later')], defaultId: 0, cancelId: 1, title: 'ST1M POT4L', message: T2(lang, `La version ${v} est disponible.`, `Version ${v} is available.`) });
+    if (!r || !r.isUpdateAvailable || !v) return { message: T2(lang, `Tu as la dernière version (${app.getVersion()}).`, `You are up to date (${app.getVersion()}).`) };
+    const ask = await dialog.showMessageBox(win, { type: 'info', buttons: [T2(lang, 'Télécharger', 'Download'), T2(lang, 'Plus tard', 'Later')], defaultId: 0, cancelId: 1, title: 'ST1M PORT4L', message: T2(lang, `La version ${v} est disponible.`, `Version ${v} is available.`) });
     if (ask.response !== 0) return { message: T2(lang, `Version ${v} disponible.`, `Version ${v} available.`) };
     autoUpdater.once('update-downloaded', async () => {
-      const q = await dialog.showMessageBox(win, { type: 'question', buttons: [T2(lang, 'Redémarrer maintenant', 'Restart now'), T2(lang, 'Au prochain lancement', 'Next launch')], defaultId: 0, cancelId: 1, title: 'ST1M POT4L', message: T2(lang, 'Mise à jour téléchargée.', 'Update downloaded.') });
+      const q = await dialog.showMessageBox(win, { type: 'question', buttons: [T2(lang, 'Redémarrer maintenant', 'Restart now'), T2(lang, 'Au prochain lancement', 'Next launch')], defaultId: 0, cancelId: 1, title: 'ST1M PORT4L', message: T2(lang, 'Mise à jour téléchargée.', 'Update downloaded.') });
       if (q.response === 0) { quitting = true; autoUpdater.quitAndInstall(); }
     });
     await autoUpdater.downloadUpdate();
@@ -279,7 +279,7 @@ ipcMain.handle('overlay:toggle', () => { applyOverlay({ ...(ovCfg || {}), on: !(
 function updateTray() {
   if (!tray) return;
   tray.setContextMenu(Menu.buildFromTemplate([
-    { label: 'ST1M POT4L', enabled: false },
+    { label: 'ST1M PORT4L', enabled: false },
     { label: 'Ouvrir / Open', click: showMain },
     { label: ovCfg && ovCfg.on ? 'Overlay : ON (Ctrl+Shift+O)' : 'Overlay : OFF (Ctrl+Shift+O)', click: toggleOverlayFromMain },
     { type: 'separator' },
@@ -295,7 +295,7 @@ function showMain() { if (win) { if (win.isMinimized()) win.restore(); win.show(
 function createWindow() {
   win = new BrowserWindow({
     width: 1280, height: 820, minWidth: 980, minHeight: 640,
-    backgroundColor: '#000000', title: 'ST1M POT4L', autoHideMenuBar: true,
+    backgroundColor: '#000000', title: 'ST1M PORT4L', autoHideMenuBar: true,
     icon: path.join(__dirname, '..', 'assets', 'icon.png'),
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
@@ -317,7 +317,7 @@ app.whenReady().then(() => {
   createWindow();
   try {
     tray = new Tray(nativeImage.createFromPath(path.join(__dirname, '..', 'assets', 'icon.png')).resize({ width: 16, height: 16 }));
-    tray.setToolTip('ST1M POT4L by idZy');
+    tray.setToolTip('ST1M PORT4L by idZy');
     tray.on('click', showMain);
     updateTray();
   } catch (_) {}

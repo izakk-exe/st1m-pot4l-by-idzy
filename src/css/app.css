@@ -42,7 +42,7 @@ body[data-bg="image"] #bg, body[data-bg="off"] #bg { display: none; }
 
 /* ---- brand */
 .brand { display: flex; align-items: center; gap: 12px; padding: 4px 6px 16px; }
-.brand svg { width: 52px; height: 44px; flex: none; filter: drop-shadow(0 0 8px rgba(245, 197, 66, .55)); }
+.brand img { width: 54px; height: 54px; flex: none; filter: drop-shadow(0 0 8px rgba(160, 80, 255, .45)); }
 .brand b { display: block; font-size: 19px; letter-spacing: .14em; color: #fff; text-shadow: var(--glow); line-height: 1.05; }
 .brand small { color: var(--gold); letter-spacing: .22em; font-size: 10.5px; text-transform: uppercase; }
 .nav { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid transparent; border-radius: 10px; background: none; color: var(--mute); cursor: pointer; text-align: left; letter-spacing: .03em; transition: .15s; }
@@ -88,7 +88,7 @@ h2 { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: va
 .tile b { font-size: 16px; letter-spacing: .05em; }
 .tile span { color: var(--mute); font-size: 13px; line-height: 1.45; }
 .hero { display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center; padding: 26px; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(120deg, rgba(0, 0, 0, .72), rgba(30, 22, 0, .45)); backdrop-filter: blur(16px); box-shadow: var(--glow); }
-.hero svg { width: 150px; height: 125px; filter: drop-shadow(0 0 18px rgba(245, 197, 66, .6)); }
+.hero img { width: 170px; height: 170px; filter: drop-shadow(0 0 20px rgba(160, 80, 255, .5)); }
 .hero h1 { font-size: 34px; letter-spacing: .16em; }
 .hero p { color: var(--mute); margin: 6px 0 16px; line-height: 1.5; }
 .row-btns { display: flex; gap: 12px; flex-wrap: wrap; }

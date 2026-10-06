@@ -1,7 +1,7 @@
-/* ST1M POT4L — share codes.
+/* ST1M PORT4L — share codes.
  * Format:  PREFIX + base64url( zlib( JSON ) )
  *   CE1:  {v:1, fov, reticle:"R G B", settings:{cvar:value}}            (Config Editor compatible)
- *   SP1:  same + {x:{profile:{...}, settings:{...}, binds:{KEY:cmd}}}    (ST1M POT4L superset)
+ *   SP1:  same + {x:{profile:{...}, settings:{...}, binds:{KEY:cmd}}}    (ST1M PORT4L superset)
  */
 (function () {
   const ST = (window.ST = window.ST || {});

@@ -1,4 +1,4 @@
-/* ST1M POT4L — file access layer.
+/* ST1M PORT4L — file access layer.
  * Three interchangeable backends exposing the same API:
  *   electron : real files via IPC (desktop app)
  *   fsa      : File System Access API (Chromium web build — user picks the Apex folder)

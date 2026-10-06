@@ -1,4 +1,4 @@
-/* ST1M POT4L — input-timing trainers (they only MEASURE your inputs, nothing is ever sent to the game).
+/* ST1M PORT4L — input-timing trainers (they only MEASURE your inputs, nothing is ever sent to the game).
  *  1. Superglide Trainer : jump then crouch exactly one frame later, inside the last 150 ms of a simulated mantle.
  *  2. Wheel cadence      : steady scroll rate (tap strafe).
  *  3. Jump rhythm        : keep time with a metronome (bunny hop / slidehop cadence).

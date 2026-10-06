@@ -1,4 +1,4 @@
-/* ST1M POT4L — Movement Lab content.
+/* ST1M PORT4L — Movement Lab content.
  * Everything here is ORIGINAL wording written for this app (definition-level summaries); the full guides, exact inputs
  * and videos live on the Apex Movement Wiki (https://apexmovement.tech) which every entry links to.
  * Community content (statuses, videos, news) is in community.json and can be refreshed from the GitHub repo. */

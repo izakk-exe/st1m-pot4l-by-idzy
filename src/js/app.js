@@ -1,4 +1,4 @@
-/* ST1M POT4L by idZy — UI */
+/* ST1M PORT4L by idZy — UI */
 (function () {
   const ST = window.ST;
   const L = (fr, en) => ST.L(fr, en);
@@ -12,7 +12,7 @@
     set(k, v) { try { localStorage.setItem('st1m_' + k, JSON.stringify(v)); return true; } catch (e) { return false; } },
   };
 
-  const LOGO = `<svg viewBox="190 250 480 400" aria-hidden="true"><defs><filter id="gl" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="12" result="b"/><feColorMatrix in="b" type="matrix" values="1 0 0 0 .35  0 .8 0 0 .2  0 0 .1 0 0  0 0 0 1.2 0" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g fill="#fff" filter="url(#gl)"><polygon points="225,432 626,282 270,623 378,543 487,360 330,472"/><polygon points="535,443 616,573 458,521"/></g></svg>`;
+  const LOGO = '<img src="img/logo.svg" alt="">';
 
   const S = {
     tab: 'home', be: ST.makeBackend(), info: {}, texts: { video: '', profile: '', settings: '' },
@@ -377,7 +377,7 @@
     return `<div class="page">
       ${demo ? `<div class="note" style="margin-bottom:16px">${L('<b>Mode démo</b> — aucun fichier Apex réel n\'est modifié. ', '<b>Demo mode</b> — no real Apex file is modified. ')}${ST.fsaSupported() ? `<button class="btn sm" data-act="fsa">${L('Choisir le dossier Apex', 'Pick the Apex folder')}</button>` : L('Utilise l\'application Windows pour éditer tes vrais fichiers.', 'Use the Windows app to edit your real files.')}</div>` : ''}
       <div class="hero">${LOGO}<div>
-        <h1>ST1M POT4L</h1><div class="tag" style="display:inline-block;color:var(--gold);border-color:var(--line)">by idZy</div>
+        <h1>ST1M PORT4L</h1><div class="tag" style="display:inline-block;color:var(--gold);border-color:var(--line)">by idZy</div>
         <p>${L('L\'éditeur de config Apex Legends de la communauté : débloque les réglages cachés (FOV 120, ombres, textures, réticule RGB…), applique ton setup en un clic et sauvegarde tout automatiquement.', 'The community Apex Legends config editor: unlock hidden settings (FOV 120, shadows, textures, RGB reticle…), apply your setup in one click and back everything up automatically.')}</p>
         <div class="row-btns">
           <button class="btn gold big" data-act="one-st1m">⚡ ${L('Appliquer le setup ST1M', 'Apply the ST1M setup')}</button>
@@ -497,12 +497,12 @@
       <div class="card"><div class="set"><div><h4>${L('Langue', 'Language')}</h4></div><div class="ctl"><div class="seg"><button class="${ST.lang === 'fr' ? 'on' : ''}" data-act="lang" data-v="fr">Français</button><button class="${ST.lang === 'en' ? 'on' : ''}" data-act="lang" data-v="en">English</button></div></div></div>
         <div class="set"><div><h4>${L('Arrière-plan', 'Background')}</h4><p>${L('Fond flou animé (trou noir), ton image, ou rien (économise le GPU).', 'Animated blurred background (black hole), your own image, or none (saves GPU).')}</p></div><div class="ctl"><div class="seg"><button class="${bg === 'hole' ? 'on' : ''}" data-act="bg" data-v="hole">${L('Animé', 'Animated')}</button><button class="${bg === 'image' ? 'on' : ''}" data-act="bg" data-v="image">${L('Image', 'Image')}</button><button class="${bg === 'off' ? 'on' : ''}" data-act="bg" data-v="off">Off</button></div><button class="btn sm" data-act="bg-pick">${L('Choisir une image', 'Choose image')}</button><input type="file" id="bgfile" accept="image/*" hidden></div></div></div>
       <h2>${L('À propos', 'About')}</h2>
-      <div class="card pad"><p class="lead" style="margin:0"><b>ST1M POT4L</b> by idZy — v${ST.VERSION}. ${L('Basé sur l\'idée de', 'Inspired by')} <i>Config Editor for Apex Legends</i> (MIT). ${L('Non affilié à Respawn ni EA. Utilisation à tes risques ; les sauvegardes sont automatiques.', 'Not affiliated with Respawn or EA. Use at your own risk; backups are automatic.')}</p></div></div>`;
+      <div class="card pad"><p class="lead" style="margin:0"><b>ST1M PORT4L</b> by idZy — v${ST.VERSION}. ${L('Basé sur l\'idée de', 'Inspired by')} <i>Config Editor for Apex Legends</i> (MIT). ${L('Non affilié à Respawn ni EA. Utilisation à tes risques ; les sauvegardes sont automatiques.', 'Not affiliated with Respawn or EA. Use at your own risk; backups are automatic.')}</p></div></div>`;
   }
 
   // ---------- chrome
   function renderSide() {
-    $('#side').innerHTML = `<div class="brand">${LOGO}<div><b>ST1M POT4L</b><small>by idZy</small></div></div>` +
+    $('#side').innerHTML = `<div class="brand">${LOGO}<div><b>ST1M PORT4L</b><small>by idZy</small></div></div>` +
       ST.TABS.map((t, i) => (i > 0 && t.sec !== ST.TABS[i - 1].sec && ST.SECTIONS[t.sec] ? `<div class="navsec">${ST.SECTIONS[t.sec][0]}</div>` : '') + `<button class="nav${S.tab === t.id ? ' on' : ''}" data-act="tab" data-v="${t.id}"><i>${t.icon}</i><span>${esc(tabLabel(t))}</span>${tabHasChanges(t.id) ? '<span class="dot"></span>' : ''}</button>`).join('') +
       `<div class="side-foot">${L('Ferme Apex avant d\'appliquer.', 'Close Apex before applying.')}<br>MIT · idZy</div>`;
   }

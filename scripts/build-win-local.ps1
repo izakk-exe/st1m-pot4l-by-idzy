@@ -8,7 +8,7 @@ Remove-Item dist\win-unpacked -Recurse -Force -ErrorAction SilentlyContinue
 npx electron-builder --win --dir --publish never --config.win.signAndEditExecutable=false
 $rc = Get-ChildItem "$env:LOCALAPPDATA\electron-builder\Cache\winCodeSign" -Recurse -Filter rcedit-x64.exe | Select-Object -First 1
 if (-not $rc) { throw 'rcedit-x64.exe not found in the electron-builder cache (run `npm run dist` once to download it).' }
-& $rc.FullName "dist\win-unpacked\ST1M POT4L.exe" --set-icon "dist\.icon-ico\icon.ico" --set-version-string ProductName "ST1M POT4L" --set-version-string FileDescription "ST1M POT4L by idZy" --set-version-string CompanyName "idZy"
+& $rc.FullName "dist\win-unpacked\ST1M PORT4L.exe" --set-icon "dist\.icon-ico\icon.ico" --set-version-string ProductName "ST1M PORT4L" --set-version-string FileDescription "ST1M PORT4L by idZy" --set-version-string CompanyName "idZy"
 
 # The pre-packaged flow does not emit app-update.yml (the normal `npm run dist` does): write it from package.json.
 $pkg = Get-Content package.json -Raw | ConvertFrom-Json

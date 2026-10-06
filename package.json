@@ -1,8 +1,8 @@
 {
-  "name": "st1m-pot4l",
-  "productName": "ST1M POT4L",
-  "version": "1.1.0",
-  "description": "ST1M POT4L by idZy Ã¢â‚¬â€ Apex Legends config editor: hidden settings, one-click setup, tap strafe binds.",
+  "name": "st1m-port4l",
+  "productName": "ST1M PORT4L",
+  "version": "1.1.1",
+  "description": "ST1M PORT4L by idZy Ã¢â‚¬â€ Apex Legends config editor: hidden settings, one-click setup, tap strafe binds.",
   "author": "idZy",
   "license": "MIT",
   "main": "electron/main.js",
@@ -16,8 +16,8 @@
     "electron-builder": "^25.1.8"
   },
   "build": {
-    "appId": "com.idzy.st1mpot4l",
-    "productName": "ST1M POT4L",
+    "appId": "com.idzy.st1mport4l",
+    "productName": "ST1M PORT4L",
     "files": [
       "electron/**",
       "src/**",
@@ -34,11 +34,11 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "shortcutName": "ST1M POT4L",
-      "artifactName": "ST1M-POT4L-Setup-${version}.${ext}"
+      "shortcutName": "ST1M PORT4L",
+      "artifactName": "ST1M-PORT4L-Setup-${version}.${ext}"
     },
     "portable": {
-      "artifactName": "ST1M-POT4L-Portable-${version}.${ext}"
+      "artifactName": "ST1M-PORT4L-Portable-${version}.${ext}"
     },
     "publish": [
       {

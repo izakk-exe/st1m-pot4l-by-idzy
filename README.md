@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="ST1M POT4L by idZy" width="100%">
+<img src="assets/banner.svg" alt="ST1M PORT4L by idZy" width="100%">
 
 ### The **Apex Legends** config editor that unlocks what the game hides — and your community's **movement** hub.
 
@@ -30,7 +30,7 @@
 ## ⚡ In 3 clicks
 
 1. **Download** the installer from the [Releases](https://github.com/izakk-exe/st1m-pot4l-by-idzy/releases/latest) page.
-2. **Close Apex**, then launch **ST1M POT4L**.
+2. **Close Apex**, then launch **ST1M PORT4L**.
 3. Click **"Apply the ST1M setup"** — FOV 120, magenta reticle, textures and shadows tuned. A backup is created and an **Undo** button stays within reach.
 
 <p align="center"><img src="assets/readme/home.jpg" width="92%" alt="Home"></p>
@@ -95,8 +95,8 @@ Tap strafe (wheel up/down = forward), scroll jump, superglide… Every key trigg
 
 | | |
 |---|---|
-| **Installer** (recommended) | `ST1M-POT4L-Setup-x.y.z.exe` — updates itself from the app (*News & links → Check for updates*) |
-| **Portable** | `ST1M-POT4L-Portable-x.y.z.exe` — no installation, no automatic updates |
+| **Installer** (recommended) | `ST1M-PORT4L-Setup-x.y.z.exe` — updates itself from the app (*News & links → Check for updates*) |
+| **Portable** | `ST1M-PORT4L-Portable-x.y.z.exe` — no installation, no automatic updates |
 
 > **Windows shows "Windows protected your PC"?** That's expected: the app is unsigned (a code-signing certificate is expensive). Click **More info → Run anyway**. All the code is visible in this repository.
 
@@ -132,4 +132,4 @@ Community content (per-season statuses, videos, news): see [`CONTRIBUTING.md`](C
 - **[Apex Movement Wiki](https://apexmovement.tech)** — the Movement Lab's technique index links to their guides. Go check them out, they do incredible work.
 - Details in [`NOTICE.md`](NOTICE.md) · [MIT](LICENSE) licensed © idZy.
 
-<div align="center"><sub><b>ST1M POT4L</b> by idZy — made by players, for players.</sub></div>
+<div align="center"><sub><b>ST1M PORT4L</b> by idZy — made by players, for players.</sub></div>

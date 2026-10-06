@@ -1,4 +1,4 @@
-/* ST1M POT4L by idZy — settings database, presets, quick binds.
+/* ST1M PORT4L by idZy — settings database, presets, quick binds.
  * Values are stored as the raw strings written to the game files, except for
  * "virtual" settings (display_mode, dvs_fps, fov, reticle) which are converted
  * by toRaw / fromRaw. */
@@ -282,8 +282,8 @@
   ST.PRESETS = [
     {
       id: 'st1m', accent: true,
-      fr: ['ST1M POT4L (idZy)', 'Le setup de idZy : FOV 120, réticule magenta, textures basses, ombres du soleil off.'],
-      en: ['ST1M POT4L (idZy)', 'idZy\'s setup: FOV 120, magenta reticle, low textures, sun shadows off.'],
+      fr: ['ST1M PORT4L (idZy)', 'Le setup de idZy : FOV 120, réticule magenta, textures basses, ombres du soleil off.'],
+      en: ['ST1M PORT4L (idZy)', 'idZy\'s setup: FOV 120, magenta reticle, low textures, sun shadows off.'],
       fov: 120, reticle: '255 0 255',
       settings: { cl_gib_allow: '1', cl_particle_fallback_base: '0', cl_particle_fallback_multiplier: '1', cl_ragdoll_maxcount: '8', cl_ragdoll_self_collision: '0', csm_cascade_res: '512', csm_coverage: '1', csm_enabled: '1', dvs_enable: '0', dynamic_streaming_budget: '0', fadeDistScale: '2', map_detail_level: '2', mat_antialias_mode: '12', mat_backbuffer_count: '1', mat_forceaniso: '16', mat_mip_linear: '1', mat_picmip: '2', mat_vsync_mode: '0', particle_cpu_level: '2', r_createmodeldecals: '1', r_decals: '256', r_lod_switch_scale: '2', shadow_depth_dimen_min: '256', shadow_depth_upres_factor_max: '2', shadow_enable: '1', shadow_maxdynamic: '4', ssao_quality: '4', stream_memory: '0', volumetric_fog: '0', volumetric_lighting: '0' },
     },
