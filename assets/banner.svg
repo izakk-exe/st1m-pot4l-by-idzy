@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" width="1280" height="360" role="img" aria-label="ST1M POT4L by idZy — Apex Legends config editor and Movement Lab">
+  <defs>
+    <radialGradient id="bgGlow" cx="76%" cy="48%" r="60%">
+      <stop offset="0" stop-color="#4a3500" stop-opacity=".85"/>
+      <stop offset=".45" stop-color="#1c1300" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" x2="1">
+      <stop offset="0" stop-color="#f5c542" stop-opacity="0"/>
+      <stop offset=".3" stop-color="#ffd966" stop-opacity=".9"/>
+      <stop offset=".5" stop-color="#ffffff"/>
+      <stop offset=".7" stop-color="#ffbe32" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#f5c542" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" x2="1">
+      <stop offset="0" stop-color="#f5c542" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#ffe9a8"/>
+      <stop offset="1" stop-color="#f5c542" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-60%" width="160%" height="220%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="1 0 0 0 .45  0 .78 0 0 .25  0 0 .12 0 0  0 0 0 1.4 0" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="3.2"/></filter>
+    <filter id="blur6"><feGaussianBlur stdDeviation="6"/></filter>
+    <style>
+      .ttl { font-family: Bahnschrift, 'Segoe UI Variable Display', 'Segoe UI', 'Arial Black', sans-serif; font-weight: 800; }
+      .sub { font-family: Bahnschrift, 'Segoe UI', Arial, sans-serif; font-weight: 600; letter-spacing: 7px; }
+      .tag { font-family: Bahnschrift, 'Segoe UI', Arial, sans-serif; font-weight: 500; }
+      .spin { transform-origin: 1100px 175px; animation: spin 38s linear infinite; }
+      .pulse { animation: pulse 3.2s ease-in-out infinite; }
+      .pulse2 { animation: pulse2 3.2s ease-in-out infinite; }
+      @keyframes pulse2 { 0%,100% { opacity: .92; } 50% { opacity: 1; } }
+      .tw { animation: tw 2.6s ease-in-out infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes pulse { 0%,100% { opacity: .75; } 50% { opacity: 1; } }
+      @keyframes tw { 0%,100% { opacity: .15; } 50% { opacity: 1; } }
+    </style>
+  </defs>
+
+  <rect width="1280" height="360" fill="#000"/>
+  <rect width="1280" height="360" fill="url(#bgGlow)"/>
+
+  <!-- stars -->
+  <g fill="#fff4d6">
+    <circle class="tw" style="animation-delay:.1s" cx="90" cy="48" r="1.4"/><circle class="tw" style="animation-delay:1.2s" cx="210" cy="300" r="1.2"/>
+    <circle class="tw" style="animation-delay:.7s" cx="420" cy="36" r="1.6"/><circle class="tw" style="animation-delay:1.9s" cx="560" cy="318" r="1.1"/>
+    <circle class="tw" style="animation-delay:.4s" cx="700" cy="70" r="1.3"/><circle class="tw" style="animation-delay:2.2s" cx="820" cy="330" r="1.5"/>
+    <circle class="tw" style="animation-delay:1.5s" cx="1130" cy="40" r="1.4"/><circle class="tw" style="animation-delay:.9s" cx="1230" cy="290" r="1.2"/>
+    <circle class="tw" style="animation-delay:2.4s" cx="1180" cy="120" r="1"/><circle class="tw" style="animation-delay:1.1s" cx="330" cy="150" r="1"/>
+  </g>
+
+  <!-- black hole + accretion disk -->
+  <g opacity=".95">
+    <g class="spin" filter="url(#soft)">
+      <ellipse cx="1100" cy="175" rx="300" ry="58" fill="none" stroke="url(#ring)" stroke-width="3" transform="rotate(-14 1100 175)" opacity=".5"/>
+      <ellipse cx="1100" cy="175" rx="250" ry="46" fill="none" stroke="url(#ring)" stroke-width="5" transform="rotate(-14 1100 175)" opacity=".75"/>
+      <ellipse cx="1100" cy="175" rx="215" ry="36" fill="none" stroke="url(#ring)" stroke-width="7" transform="rotate(-14 1100 175)"/>
+      <ellipse cx="1100" cy="175" rx="165" ry="27" fill="none" stroke="url(#ring)" stroke-width="9" transform="rotate(-14 1100 175)"/>
+    </g>
+    <circle cx="1100" cy="175" r="84" fill="#000"/>
+    <circle cx="1100" cy="175" r="86" fill="none" stroke="#ffd966" stroke-opacity=".55" stroke-width="2" filter="url(#blur6)" class="pulse"/>
+  </g>
+
+  <!-- logo -->
+  <g transform="translate(70 62) scale(.5)" fill="#fff" filter="url(#glow)" class="pulse2">
+    <polygon transform="translate(-225 -282)" points="225,432 626,282 270,623 378,543 487,360 330,472"/>
+    <polygon transform="translate(-225 -282)" points="535,443 616,573 458,521"/>
+  </g>
+
+  <!-- title -->
+  <g filter="url(#glow)">
+    <text class="ttl" x="318" y="178" font-size="104" fill="#fff" letter-spacing="9">ST1M POT4L</text>
+  </g>
+  <rect x="322" y="198" width="560" height="3" fill="url(#line)" rx="2">
+    <animate attributeName="opacity" values=".5;1;.5" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  <text class="sub" x="324" y="238" font-size="23" fill="#f5c542">BY IDZY</text>
+  <text class="tag" x="324" y="282" font-size="22" fill="#e8e2d0">Apex Legends config editor  ·  Movement Lab  ·  Overlay clavier &amp; souris</text>
+  <text class="tag" x="324" y="314" font-size="17" fill="#a39e90">FOV 120 · setup en 1 clic · tap strafe · Superglide Trainer · avant/après · 100 % gratuit</text>
+</svg>
