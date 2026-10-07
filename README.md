@@ -59,7 +59,7 @@
 </table>
 
 ### 👁️ See the effect before you apply it
-Every setting has a **Preview** button: drag the golden bar to compare **on real in-game captures** (sun shadows, SSAO, textures, LOD, decals, streaming…), with a short note on what it actually changes.
+Settings with real captures have a **Preview** button: drag the golden bar to compare **on real in-game captures** (sun shadows, SSAO, textures, LOD, decals, streaming…), with a short note on what it actually changes.
 
 <p align="center"><img src="assets/readme/apercu.jpg" width="92%" alt="Before / after preview of the presets"></p>
 

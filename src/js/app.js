@@ -182,34 +182,19 @@
   };
 
   // ---------- previews
-  function previewSources() {
-    return [['cur', L('Fichier actuel', 'Current file'), S.cur.values], ['draft', L('Brouillon', 'Draft'), S.draft.values]]
-      .concat(ST.PRESETS.map((p) => [p.id, p[ST.lang][0], { ...S.cur.values, ...ST.presetToState(p).values }]));
-  }
   function pagePreview() {
-    const src = previewSources();
-    if (!S.pvA) { S.pvA = 'cur'; S.pvB = changes().length ? 'draft' : 'competitive'; }
-    const opt = (cur) => src.map((x) => `<option value="${x[0]}"${x[0] === cur ? ' selected' : ''}>${esc(x[1])}</option>`).join('');
-    return `<div class="page">${pageTitle(L('Aperçu avant / après', 'Before / after preview'), L("Glisse la barre dorée pour comparer. Captures réelles pour les presets et la plupart des réglages ; illustration générée pour les autres.", 'Drag the golden bar to compare. Real captures for the presets and most settings; generated illustration for the others.'))}
+    return `<div class="page">${pageTitle(L('Aperçu avant / après', 'Before / after preview'), L('Glisse la barre dorée pour comparer des captures réelles du jeu.', 'Drag the golden bar to compare real in-game captures.'))}
       <h2>${L('Captures réelles des presets', 'Real preset captures')}</h2>
       <div class="sel2"><label>${L('GAUCHE', 'LEFT')}</label><select class="inp" data-in="ppA">${['competitive', 'balanced', 'ultra'].map((x) => `<option value="${x}"${x === (S.ppA || 'competitive') ? ' selected' : ''}>${esc(ST.PRESETS.find((p) => p.id === x)[ST.lang][0])}</option>`).join('')}</select><label>${L('DROITE', 'RIGHT')}</label><select class="inp" data-in="ppB">${['competitive', 'balanced', 'ultra'].map((x) => `<option value="${x}"${x === (S.ppB || 'ultra') ? ' selected' : ''}>${esc(ST.PRESETS.find((p) => p.id === x)[ST.lang][0])}</option>`).join('')}</select></div>
       <div id="cmp-preset"></div>
-      <h2>${L('Illustration : fichier actuel vs brouillon', 'Illustration: current file vs draft')}</h2>
-      <div class="sel2"><label>${L('GAUCHE', 'LEFT')}</label><select class="inp" data-in="pvA">${opt(S.pvA)}</select><label>${L('DROITE', 'RIGHT')}</label><select class="inp" data-in="pvB">${opt(S.pvB)}</select></div>
-      <div id="cmp-tab"></div>
-      <p class="fx">${L("Astuce : clique sur « 👁 Aperçu » à côté d\'un réglage pour voir uniquement son effet. Tu peux remplacer la scène par tes propres captures du jeu (voir src/previews/README.md).", 'Tip: click “👁 Preview” next to a setting to see only its effect. You can replace the scene with your own in-game screenshots (see src/previews/README.md).')}</p></div>`;
+      <p class="fx">${L("Astuce : clique sur « 👁 Aperçu » à côté d\'un réglage pour voir uniquement son effet. Tu peux ajouter tes propres captures du jeu (voir src/previews/README.md).", 'Tip: click “👁 Preview” next to a setting to see only its effect. You can add your own in-game screenshots (see src/previews/README.md).')}</p></div>`;
   }
   function mountPresetPreview() {
     const host = $('#cmp-preset'); if (!host) return;
     const A = S.ppA || 'competitive', B = S.ppB || 'ultra', nm = (x) => ST.PRESETS.find((p) => p.id === x)[ST.lang][0];
     ST.mountCompare(host, { label: nm(A) }, { label: nm(B) }, { a: `previews/preset_${A}.webp`, b: `previews/preset_${B}.webp` });
   }
-  function mountTabPreview() {
-    mountPresetPreview();
-    const host = $('#cmp-tab'); if (!host) return;
-    const src = previewSources(), a = src.find((x) => x[0] === S.pvA) || src[0], b = src.find((x) => x[0] === S.pvB) || src[1];
-    ST.mountCompare(host, { values: a[2], label: a[1] }, { values: b[2], label: b[1] });
-  }
+  const mountTabPreview = () => mountPresetPreview();
   function previewOptions(d) {
     const iv = ST.imgValues(d.id);
     if (iv.length >= 2) {
@@ -217,12 +202,6 @@
       const ord = iv.slice().sort((x, y) => Number(x) - Number(y));
       return ord.map((v) => [d.opts ? ((d.opts.find((o) => Number(o[0]) === Number(v)) || [v])[0]) : v, lab(v)]);
     }
-    if (d.id === 'reticle') return [['255 255 255', L('Blanc', 'White')], ['255 0 255', 'Magenta'], ['0 255 0', L('Vert', 'Green')], ['0 220 255', 'Cyan'], ['255 40 40', L('Rouge', 'Red')]];
-    if (d.type === 'toggle') return [[d.off, L('Désactivé', 'Off')], [d.on, L('Activé', 'On')]];
-    if (d.type === 'select') return d.opts.map((o) => [o[0], o[ST.lang === 'fr' ? 1 : 2]]);
-    const out = [];
-    for (let i = 0; i < 5; i++) { const v = Number((Math.round((d.min + ((d.max - d.min) * i) / 4) / d.step) * d.step).toFixed(3)); out.push([String(v), String(Number(v.toFixed(2)))]); }
-    return out;
   }
   function openPreview(id, a, b) {
     const d = ST.DEF[id], opts = previewOptions(d);
@@ -230,7 +209,7 @@
     const so = (cur) => opts.map((o) => `<option value="${esc(o[0])}"${o[0] === cur ? ' selected' : ''}>${esc(o[1])}</option>`).join('');
     dialog(`<h3>👁 ${esc(defLabel(d))}</h3>
       <div class="sel2"><label>${L('GAUCHE', 'LEFT')}</label><select class="inp" data-in="pvdA">${so(S.pvd.a)}</select><label>${L('DROITE', 'RIGHT')}</label><select class="inp" data-in="pvdB">${so(S.pvd.b)}</select></div>
-      <div id="cmp-dlg"></div><p class="note" id="pv-note" hidden style="margin-top:10px">${L('Pas de capture réelle pour ce réglage : illustration générée (tu peux ajouter la tienne dans src/previews/).', 'No real capture for this setting: generated illustration (you can add your own in src/previews/).')}</p><p class="fx">${esc(ST.FX[id][ST.lang === 'fr' ? 0 : 1])}</p>
+      <div id="cmp-dlg"></div><p class="note" id="pv-note" hidden style="margin-top:10px">${L('Pas de capture pour cette combinaison de valeurs : choisis-en deux autres.', 'No capture for this combination of values: pick two others.')}</p><p class="fx">${esc(ST.FX[id][ST.lang === 'fr' ? 0 : 1])}</p>
       <div class="foot"><button class="btn" data-act="close">${L('Fermer', 'Close')}</button></div>`);
     $('#modal .dlg').style.width = 'min(900px, 95vw)';
     mountDlgPreview();
@@ -238,12 +217,11 @@
   async function mountDlgPreview() {
     const { id, a, b, opts } = S.pvd, host = $('#cmp-dlg'); if (!host) return;
     const lab = (v) => (opts.find((o) => o[0] === v) || [v, v])[1];
-    const vals = (v) => ({ ...S.draft.values, [id]: v });
     const note = $('#pv-note');
     const ov = await ST.loadOverrides(id, a, b);
     if (!S.pvd || S.pvd.a !== a || S.pvd.b !== b || !$('#cmp-dlg')) return;
-    ST.mountCompare($('#cmp-dlg'), { values: vals(a), label: lab(a) }, { values: vals(b), label: lab(b) }, ov);
     if (note) note.hidden = !!ov;
+    if (ov) ST.mountCompare($('#cmp-dlg'), { label: lab(a) }, { label: lab(b) }, ov); else host.innerHTML = '';
   }
 
   // ---------- game launcher
@@ -694,7 +672,6 @@
     if (el.id === 'impfile' && el.files[0]) { el.files[0].text().then((t) => importCode(t, false)); el.value = ''; return; }
     if (el.id === 'bgfile' && el.files[0]) { bgFromFile(el.files[0]); el.value = ''; return; }
     if (k === 'ppA' || k === 'ppB') { S[k] = el.value; return mountPresetPreview(); }
-    if (k === 'pvA' || k === 'pvB') { S[k] = el.value; return mountTabPreview(); }
     if (k === 'pvdA' || k === 'pvdB') { S.pvd[k === 'pvdA' ? 'a' : 'b'] = el.value; return mountDlgPreview(); }
     if (!k) return;
     const id = el.dataset.id, d = ST.DEF[id];
