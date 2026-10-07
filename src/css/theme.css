@@ -217,9 +217,7 @@ input[type=range] { accent-color: var(--gold); }
   #view { padding: 10px 20px 120px; }
   .sprev { grid-template-columns: 1fr; }
 }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-}
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 
 /* =====================================================================================================
  * HOME POSTER — key-art layout (HBO / Arcane / Broly / Arkham boards): the animated Apex landscape as the
@@ -284,9 +282,7 @@ body[data-tab=home][data-bg=landscape] #veil { background: radial-gradient(ellip
 #view.enter .home .h-edge, #view.enter .home .h-foot { animation: fadeUp 1s 1.1s ease both; }
 @media (max-width: 1500px) { .h-side { display: none; } }
 @media (max-width: 900px) { .h-edge { display: none; } .h-title { font-size: clamp(64px, 20vw, 160px); } .h-heroart { width: 80%; right: 0; opacity: .55; } }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-}
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 
 /* =====================================================================================================
  * VIDEO BACKDROP + UNIFIED MENU

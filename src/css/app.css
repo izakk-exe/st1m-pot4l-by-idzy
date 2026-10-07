@@ -29,7 +29,7 @@ body[data-bg="image"] #bgimg { display: block; }
 body[data-bg="image"] #bg, body[data-bg="off"] #bg, body[data-bg="video"] #bg { display: none; }
 @keyframes drift { to { transform: scale(1.1) translate(-2%, 1.5%); } }
 #veil { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at 30% 20%, rgba(0, 0, 0, 0), rgba(0, 0, 0, .55) 75%), linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .4)); }
-@media (prefers-reduced-motion: reduce) { #bgimg { animation: none; } }
+html[data-motion="off"] #bgimg { animation: none; }
 
 /* ---- layout */
 #app { position: relative; z-index: 2; height: 100%; display: grid; grid-template-columns: 250px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
@@ -264,7 +264,7 @@ a.btn { text-decoration: none; color: inherit; }
 /* =====================================================================================================
  * Refinement layer (v1.2): calmer, more legible, professional. Overrides the rules above.
  * Principles: neutral surfaces, gold only for the one primary action and the active state, no glow,
- * clear type hierarchy, smooth but short motion (150–420 ms), everything honours prefers-reduced-motion.
+ * clear type hierarchy, smooth but short motion (150–420 ms), everything honours the Animations setting.
  * ===================================================================================================== */
 :root {
   --panel: rgba(15, 15, 17, .74);
@@ -421,9 +421,7 @@ h3 { font-weight: 650; letter-spacing: .01em; }
 @keyframes introBy { to { opacity: .9; } }
 @keyframes introLn { to { transform: scaleX(1); } }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-}
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 
 /* ---- pro profile cards + chooser */
 .pgrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }

@@ -6,7 +6,7 @@
   try { seen = sessionStorage.getItem('st1m_intro') === '1'; sessionStorage.setItem('st1m_intro', '1'); } catch (e) {}
   if (seen) { el.remove(); return; }
   var reduce = false;
-  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  try { reduce = JSON.parse(localStorage.getItem('st1m_motion')) === 'off'; } catch (e) {}
   var timer = null;
   function close() {
     if (el.classList.contains('out')) return;

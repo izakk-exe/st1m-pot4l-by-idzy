@@ -10,6 +10,7 @@
 - **English by default** — switch to French in System → Appearance.
 
 ### Fixed
+- The animated background could stay frozen on some PCs (Windows "reduce motion" switched off by power-saving tweaks, remote desktops…). Animations are now an app setting — System → Appearance → Animations (On by default) — and the background video resumes by itself if it ever pauses.
 - Key names written to `settings.cfg` now match what the game uses (`LSHIFT`, `LCTRL`, `MWHEELUP`…) and custom binds are flagged like the game does — this fixes wheel-based bind packs (tap strafe, scroll jump…).
 - Previews now use **real in-game captures only** (the generated placeholder scene is gone).
 

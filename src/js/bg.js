@@ -207,6 +207,18 @@
   addEventListener('resize', () => { if (animated()) { resize(); if (!raf && mode === 'landscape') drawLandscape(6); } });
   addEventListener('mousemove', (e) => { tpx = e.clientX / innerWidth - 0.5; tpy = e.clientY / innerHeight - 0.5; }, { passive: true });
   document.addEventListener('visibilitychange', () => { if (document.hidden) { stop(); if (mode === 'video' && vid) vid.pause(); } else { if (animated()) start(); if (mode === 'video') playVideo(true); } });
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) ST.reducedMotion = true;
+  // Animations: an app setting (System → Appearance), ON by default. Windows' "reduce motion" flag is deliberately NOT used:
+  // it is often switched off by power-saving tweaks, remote desktops or VMs and would silently freeze the background.
+  const motionOff = () => { try { return JSON.parse(localStorage.getItem('st1m_motion')) === 'off'; } catch (e) { return false; } };
+  ST.reducedMotion = motionOff();
+  document.documentElement.dataset.motion = ST.reducedMotion ? 'off' : 'on';
+  ST.setMotion = (on) => {
+    ST.reducedMotion = !on; document.documentElement.dataset.motion = on ? 'on' : 'off';
+    if (animated()) start(); if (mode === 'video') playVideo(true);
+  };
+  // a muted background loop must never stay paused: resume after focus, clicks, or an unexpected pause
+  const resume = () => { if (mode === 'video' && vid && !document.hidden && !ST.reducedMotion && vid.paused) vid.play().catch(() => {}); };
+  if (vid) vid.addEventListener('pause', () => setTimeout(resume, 250));
+  addEventListener('focus', resume); addEventListener('pointerdown', resume, { passive: true });
   document.body.dataset.bg = mode;
 })();
