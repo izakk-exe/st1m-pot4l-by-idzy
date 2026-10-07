@@ -177,7 +177,7 @@
   function playVideo(on) {
     if (!vid) return;
     if (!on) { vid.pause(); return; }
-    if (!vid.getAttribute('src')) { vid.src = 'previews/home-bg.mp4'; vid.addEventListener('error', () => { if (mode === 'video') ST.setBackground('landscape'); }, { once: true }); }
+    if (!vid.getAttribute('src')) { vid.src = ST.bgVideoUrl || 'previews/home-bg.mp4'; vid.addEventListener('error', () => { if (mode === 'video') ST.setBackground('landscape'); }, { once: true }); }
     if (ST.reducedMotion) { try { vid.currentTime = 2; } catch (e) {} vid.pause(); } else vid.play().catch(() => {});
   }
   function start() {
@@ -189,6 +189,13 @@
   }
   function stop() { cancelAnimationFrame(raf); raf = 0; }
 
+  // the user's own video (set from System → Appearance); applied immediately when the video background is active
+  ST.setBgVideo = (url) => {
+    ST.bgVideoUrl = url || null;
+    if (!vid) return;
+    vid.removeAttribute('src'); vid.load();
+    if (mode === 'video') playVideo(true);
+  };
   ST.bgFocus = (x, y) => { tx = x == null ? 0.64 : x; ty = y == null ? 0.46 : y; };
   ST.setBackground = (m, dataUrl) => {
     mode = m;

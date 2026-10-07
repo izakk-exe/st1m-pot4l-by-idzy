@@ -20,6 +20,10 @@ contextBridge.exposeInMainWorld('stApi', {
   displayRestore: () => ipcRenderer.invoke('display:restore'),
   displayActive: () => ipcRenderer.invoke('display:active'),
   onDisplayRestored: (cb) => ipcRenderer.on('display:restored', () => cb()),
+  // background video
+  bgVideo: () => ipcRenderer.invoke('bg:video'),
+  bgPickVideo: () => ipcRenderer.invoke('bg:pickVideo'),
+  bgClearVideo: () => ipcRenderer.invoke('bg:clearVideo'),
   // player stats
   playerHasKey: () => ipcRenderer.invoke('player:hasKey'),
   playerSetKey: (k) => ipcRenderer.invoke('player:setKey', k),

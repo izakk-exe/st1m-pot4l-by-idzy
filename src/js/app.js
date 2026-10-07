@@ -456,7 +456,7 @@
       <div class="card"><div class="set"><div><h4>${L('Verrouiller videoconfig.txt', 'Lock videoconfig.txt')}</h4><p>${L('Passe le fichier en lecture seule après application pour qu\'Apex ne réinitialise pas tes réglages. Désactive avant de modifier dans le jeu.', 'Makes the file read-only after applying so Apex cannot reset your settings. Turn off before changing options in-game.')}</p></div><div class="ctl"><button class="switch${S.lock ? ' on' : ''}" data-act="lock"></button></div></div></div>
       <h2>${L('Apparence', 'Appearance')}</h2>
       <div class="card"><div class="set"><div><h4>${L('Langue', 'Language')}</h4></div><div class="ctl"><div class="seg"><button class="${ST.lang === 'fr' ? 'on' : ''}" data-act="lang" data-v="fr">Français</button><button class="${ST.lang === 'en' ? 'on' : ''}" data-act="lang" data-v="en">English</button></div></div></div>
-        <div class="set"><div><h4>${L('Arrière-plan', 'Background')}</h4><p>${L('Vidéo, paysage animé, trou noir, ton image, ou rien (économise le GPU).', 'Video, animated landscape, black hole, your own image, or nothing (saves GPU).')}</p></div><div class="ctl"><div class="seg"><button class="${bg === 'video' ? 'on' : ''}" data-act="bg" data-v="video">${L('Vidéo', 'Video')}</button><button class="${bg === 'landscape' ? 'on' : ''}" data-act="bg" data-v="landscape">${L('Paysage', 'Landscape')}</button><button class="${bg === 'hole' ? 'on' : ''}" data-act="bg" data-v="hole">${L('Trou noir', 'Black hole')}</button><button class="${bg === 'image' ? 'on' : ''}" data-act="bg" data-v="image">${L('Image', 'Image')}</button><button class="${bg === 'off' ? 'on' : ''}" data-act="bg" data-v="off">Off</button></div><button class="btn sm" data-act="bg-pick">${L('Choisir une image', 'Choose image')}</button><input type="file" id="bgfile" accept="image/*" hidden></div></div></div>
+        <div class="set"><div><h4>${L('Arrière-plan', 'Background')}</h4><p>${L('Ta propre vidéo (elle reste sur ton PC), paysage animé, trou noir, une image, ou rien (économise le GPU).', 'Your own video (it stays on your PC), animated landscape, black hole, an image, or nothing (saves GPU).')}</p></div><div class="ctl"><div class="seg"><button class="${bg === 'video' ? 'on' : ''}" data-act="bg" data-v="video">${L('Vidéo', 'Video')}</button><button class="${bg === 'landscape' ? 'on' : ''}" data-act="bg" data-v="landscape">${L('Paysage', 'Landscape')}</button><button class="${bg === 'hole' ? 'on' : ''}" data-act="bg" data-v="hole">${L('Trou noir', 'Black hole')}</button><button class="${bg === 'image' ? 'on' : ''}" data-act="bg" data-v="image">${L('Image', 'Image')}</button><button class="${bg === 'off' ? 'on' : ''}" data-act="bg" data-v="off">Off</button></div><button class="btn sm" data-act="bg-pick">${L('Choisir une image', 'Choose image')}</button>${window.stApi && window.stApi.bgPickVideo ? `<button class="btn sm" data-act="bgvid-pick">${L('Choisir une vidéo', 'Choose video')}</button>${ST.bgVideoUrl ? `<button class="btn sm danger" data-act="bgvid-clear">${L('Retirer la vidéo', 'Remove video')}</button>` : ''}` : ''}<input type="file" id="bgfile" accept="image/*" hidden></div></div></div>
       <h2>${L('À propos', 'About')}</h2>
       <div class="card pad"><p class="lead" style="margin:0"><b>ST1M PORT4L</b> by idZy — v${ST.VERSION}. ${L('Basé sur l\'idée de', 'Inspired by')} <i>Config Editor for Apex Legends</i> (MIT). ${L('Non affilié à Respawn ni EA. Utilisation à tes risques ; les sauvegardes sont automatiques.', 'Not affiliated with Respawn or EA. Use at your own risk; backups are automatic.')}</p></div></div>`;
   }
@@ -641,6 +641,12 @@
     lang: (el) => { ST.lang = el.dataset.v; store.set('lang', ST.lang); render(); },
     bg: (el) => { store.set('bg', el.dataset.v); applyBg(); render(); },
     'bg-pick': () => $('#bgfile').click(),
+    'bgvid-pick': async () => {
+      const r = await window.stApi.bgPickVideo();
+      if (r && r.url) { ST.setBgVideo(r.url); store.set('bg', 'video'); applyBg(); render(); toast(L('Vidéo de fond enregistrée.', 'Background video saved.')); }
+      else if (r && r.error) toast(r.error === 'too-big' ? L('Vidéo trop lourde (300 Mo max).', 'Video too large (300 MB max).') : L('Impossible de charger la vidéo.', 'Could not load the video.'), { bad: true });
+    },
+    'bgvid-clear': async () => { await window.stApi.bgClearVideo(); ST.setBgVideo(null); render(); toast(L('Vidéo de fond retirée.', 'Background video removed.')); },
   };
 
   function applyBg() {
@@ -740,6 +746,7 @@
   (async function boot() {
     try { await reload(); } catch (e) { toast(String(e.message || e), { bad: true }); }
     try { S.code = await ST.encodeCode(ST.buildPayload(ST.presetToState(ST.PRESETS[0]).values, {}), false); } catch (e) { S.code = ''; }
+    try { if (window.stApi && window.stApi.bgVideo) ST.bgVideoUrl = (await window.stApi.bgVideo()) || null; } catch (e) {}
     applyBg(); render();
     refreshGameInfo();
     if (ST.hub) ST.hub.load();

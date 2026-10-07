@@ -4,6 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { execFile, spawn } = require('child_process');
+const { pathToFileURL } = require('url');
 
 if (!app.requestSingleInstanceLock()) app.quit();
 
@@ -205,6 +206,23 @@ ipcMain.handle('display:test', (_e, w, h) => {
 });
 ipcMain.handle('display:restore', () => stopStretch());
 ipcMain.handle('display:active', () => !!stretchProc);
+
+// =============================================================== background video (the user's own file, kept in userData — never shipped with the app)
+const bgVideoFile = () => path.join(app.getPath('userData'), 'background-video.mp4');
+const bgVideoUrl = () => { try { const p = bgVideoFile(); return fs.existsSync(p) ? pathToFileURL(p).href + '?v=' + Math.round(fs.statSync(p).mtimeMs) : null; } catch (_) { return null; } };
+ipcMain.handle('bg:video', () => bgVideoUrl());
+ipcMain.handle('bg:pickVideo', async () => {
+  const r = await dialog.showOpenDialog(win, { properties: ['openFile'], filters: [{ name: 'Video', extensions: ['mp4', 'm4v', 'webm'] }] });
+  if (r.canceled || !r.filePaths[0]) return { canceled: true };
+  try {
+    const st = fs.statSync(r.filePaths[0]);
+    if (st.size > 300 * 1024 * 1024) return { error: 'too-big' };
+    fs.mkdirSync(path.dirname(bgVideoFile()), { recursive: true });
+    fs.copyFileSync(r.filePaths[0], bgVideoFile());
+    return { url: bgVideoUrl() };
+  } catch (e) { return { error: String(e.message || e).slice(0, 120) }; }
+});
+ipcMain.handle('bg:clearVideo', () => { try { fs.unlinkSync(bgVideoFile()); } catch (_) {} return true; });
 
 // =============================================================== player stats (Apex Legends Status API, user's own key)
 const API_HOST = 'https://api.apexlegendsstatus.com';
