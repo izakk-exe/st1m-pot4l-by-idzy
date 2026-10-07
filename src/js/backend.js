@@ -12,7 +12,7 @@
   const SAMPLE = {
     video: '"VideoConfig"\r\n{\r\n\t"setting.cl_gib_allow"\t\t"1"\r\n\t"setting.csm_enabled"\t\t"1"\r\n\t"setting.csm_coverage"\t\t"2"\r\n\t"setting.csm_cascade_res"\t\t"1024"\r\n\t"setting.mat_picmip"\t\t"0"\r\n\t"setting.mat_forceaniso"\t\t"8"\r\n\t"setting.ssao_quality"\t\t"4"\r\n\t"setting.shadow_enable"\t\t"1"\r\n\t"setting.shadow_maxdynamic"\t\t"2"\r\n\t"setting.volumetric_lighting"\t\t"1"\r\n\t"setting.volumetric_fog"\t\t"1"\r\n\t"setting.r_lod_switch_scale"\t\t"1"\r\n\t"setting.stream_memory"\t\t"1000000"\r\n\t"setting.mat_vsync_mode"\t\t"0"\r\n\t"setting.defaultres"\t\t"1920"\r\n\t"setting.defaultresheight"\t\t"1080"\r\n\t"setting.fullscreen"\t\t"1"\r\n\t"setting.nowindowborder"\t\t"0"\r\n\t"setting.gamma"\t\t"1.0"\r\n}\r\n',
     profile: 'cl_fovScale "1.000000"\r\nreticle_color "255 255 255"\r\nsound_without_focus "0"\r\n',
-    settings: 'gfx_nvnUseLowLatency "1"\r\ngfx_nvnUseLowLatencyBoost "0"\r\nbind_US_standard "w" "+forward" 0\r\nbind_US_standard "SPACE" "+jump" 0\r\nbind_US_standard "MWHEEL_UP" "+ability 1" 0\r\n',
+    settings: 'gfx_nvnUseLowLatency "1"\r\ngfx_nvnUseLowLatencyBoost "0"\r\nbind_US_standard "w" "+forward" 0\r\nbind_US_standard "SPACE" "+jump" 0\r\nbind_US_standard "MWHEELUP" "+ability 1" 0\r\n',
   };
 
   // ---------------- Electron

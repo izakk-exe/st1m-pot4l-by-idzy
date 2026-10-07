@@ -1,5 +1,5 @@
 // ST1M PORT4L by idZy — Electron main process
-const { app, BrowserWindow, ipcMain, dialog, shell, Menu, Tray, screen, globalShortcut, nativeImage } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, Menu, Tray, screen, globalShortcut, nativeImage, safeStorage, net } = require('electron');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -133,16 +133,122 @@ ipcMain.handle('game:launch', async (_e, o) => {
   const args = String(o.args || '').trim().slice(0, 400);
   if (!/^[\w+\-. =,]*$/.test(args)) return { ok: false, error: 'invalid launch options' };
   if (await apexRunning()) return { ok: false, error: 'running' };
+  let stretch = null;
+  if (o.stretch) {
+    const r = await startStretch(o.stretch.w, o.stretch.h);
+    if (!r.ok) return { ok: false, error: 'stretch:' + (r.error || 'failed'), detail: r };
+    stretch = r;
+  }
   if (o.mode === 'steam') {
     await shell.openExternal(`steam://run/${APEX_STEAM_ID}//${encodeURIComponent(args)}/`);
-    return { ok: true };
+    return { ok: true, stretch: !!stretch, scalingCode: stretch ? stretch.scalingCode : 0 };
   }
   const exe = String(o.exe || '');
-  if (!EXE_NAMES.includes(path.basename(exe).toLowerCase()) || !fs.existsSync(exe)) return { ok: false, error: 'exe-missing' };
+  if (!EXE_NAMES.includes(path.basename(exe).toLowerCase()) || !fs.existsSync(exe)) { if (stretch) await stopStretch(); return { ok: false, error: 'exe-missing' }; }
   const child = spawn(exe, args.split(/\s+/).filter(Boolean), { detached: true, stdio: 'ignore', cwd: path.dirname(exe) });
   child.on('error', () => {});
   child.unref();
-  return { ok: true };
+  return { ok: true, stretch: !!stretch, scalingCode: stretch ? stretch.scalingCode : 0 };
+});
+
+// =============================================================== stretched resolution (no black bars)
+// The helper script is copied to userData (like the input helper) so it also works from inside app.asar.
+function displayScript() {
+  const dst = path.join(app.getPath('userData'), 'display-stretch.ps1');
+  fs.mkdirSync(path.dirname(dst), { recursive: true });
+  fs.writeFileSync(dst, fs.readFileSync(path.join(__dirname, 'display-stretch.ps1'), 'utf8'), 'utf8');
+  return dst;
+}
+const PS_ARGS = ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File'];
+let stretchProc = null;
+const intIn = (v, lo, hi) => { v = Math.round(Number(v)); return Number.isFinite(v) && v >= lo && v <= hi ? v : null; };
+function psJson(args, timeout) {
+  return new Promise((resolve) => {
+    if (process.platform !== 'win32') return resolve({ ok: false, error: 'windows-only' });
+    execFile('powershell.exe', [...PS_ARGS, displayScript(), ...args], { windowsHide: true, timeout: timeout || 15000 }, (err, out) => {
+      try { resolve(JSON.parse(String(out).trim().split(/\r?\n/).pop())); } catch (_) { resolve({ ok: false, error: err ? 'helper' : 'parse' }); }
+    });
+  });
+}
+async function stopStretch() {
+  if (stretchProc) { try { stretchProc.kill(); } catch (_) {} stretchProc = null; }
+  return psJson(['-Action', 'reset']);
+}
+async function startStretch(w, h) {
+  w = intIn(w, 640, 7680); h = intIn(h, 480, 4320);
+  if (!w || !h) return { ok: false, error: 'size' };
+  if (stretchProc) await stopStretch();
+  return new Promise((resolve) => {
+    let done = false, buf = '';
+    const fin = (r) => { if (!done) { done = true; resolve(r); } };
+    const p = spawn('powershell.exe', [...PS_ARGS, displayScript(), '-Action', 'stretch', '-W', String(w), '-H', String(h)], { windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'] });
+    stretchProc = p;
+    p.stdout.on('data', (d) => {
+      buf += d.toString('utf8');
+      let i;
+      while ((i = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+        let j = null; try { j = JSON.parse(line); } catch (_) {}
+        if (!j) continue;
+        if (j.restored) { if (stretchProc === p) stretchProc = null; if (win && !win.isDestroyed()) win.webContents.send('display:restored'); } else fin(j);
+      }
+    });
+    p.on('exit', () => { if (stretchProc === p) stretchProc = null; fin({ ok: false, error: 'helper' }); });
+    p.on('error', () => fin({ ok: false, error: 'helper' }));
+    setTimeout(() => fin({ ok: false, error: 'timeout' }), 12000);
+  });
+}
+ipcMain.handle('display:info', () => psJson(['-Action', 'info']));
+ipcMain.handle('display:test', (_e, w, h) => {
+  w = intIn(w, 640, 7680); h = intIn(h, 480, 4320);
+  return w && h ? psJson(['-Action', 'stretch', '-W', String(w), '-H', String(h), '-TestOnly']) : { ok: false, error: 'size' };
+});
+ipcMain.handle('display:restore', () => stopStretch());
+ipcMain.handle('display:active', () => !!stretchProc);
+
+// =============================================================== player stats (Apex Legends Status API, user's own key)
+const API_HOST = 'https://api.apexlegendsstatus.com';
+const keyFile = () => path.join(app.getPath('userData'), 'apikey.bin');
+function readKey() {
+  try {
+    const raw = fs.readFileSync(keyFile());
+    return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(raw) : raw.toString('utf8');
+  } catch (_) { return ''; }
+}
+ipcMain.handle('player:hasKey', () => !!readKey());
+ipcMain.handle('player:setKey', (_e, k) => {
+  k = String(k || '').trim();
+  if (!k) { try { fs.unlinkSync(keyFile()); } catch (_) {} return { ok: true, has: false }; }
+  if (!/^[\w-]{8,80}$/.test(k)) return { ok: false, error: 'invalid-key' };
+  try { fs.writeFileSync(keyFile(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(k) : Buffer.from(k)); return { ok: true, has: true }; } catch (e) { return { ok: false, error: e.message }; }
+});
+const PLATFORMS = ['PC', 'PS4', 'X1', 'SWITCH'];
+ipcMain.handle('player:fetch', async (_e, kind, q) => {
+  q = q || {};
+  const key = readKey();
+  if (!key) return { ok: false, error: 'no-key' };
+  if (!['bridge', 'predator', 'leaderboard'].includes(kind)) return { ok: false, error: 'bad-kind' };
+  const u = new URL(API_HOST + '/' + kind);
+  if (kind === 'bridge') {
+    const name = String(q.player || '').trim();
+    if (!/^[\w .\-[\]|]{1,40}$/.test(name) || !PLATFORMS.includes(q.platform)) return { ok: false, error: 'bad-player' };
+    u.searchParams.set('player', name); u.searchParams.set('platform', q.platform);
+  } else if (kind === 'leaderboard') {
+    const legend = String(q.legend || 'Global'), plat = q.platform || 'PC';
+    if (!/^[A-Za-z ]{1,24}$/.test(legend) || ![...PLATFORMS, 'ANY'].includes(plat)) return { ok: false, error: 'bad-query' };
+    u.searchParams.set('legend', legend); u.searchParams.set('platform', plat);
+    if (q.key && /^\w{1,40}$/.test(q.key)) u.searchParams.set('key', q.key);
+  }
+  try {
+    const r = await net.fetch(u.toString(), { headers: { Authorization: key }, signal: AbortSignal.timeout(12000) });
+    const text = await r.text();
+    let data = null; try { data = JSON.parse(text); } catch (_) {}
+    const plain = !data ? text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200) : '';
+    const msg = data ? (data.Error || data.error || data.message) : plain;
+    if (!r.ok || !data) return { ok: false, error: r.ok ? 'api' : 'http-' + r.status, status: r.status, message: msg ? String(msg).slice(0, 200) : '' };
+    if (msg) return { ok: false, error: 'api', message: String(msg).slice(0, 200) };
+    return { ok: true, data };
+  } catch (e) { return { ok: false, error: 'network', message: String(e.message || e).slice(0, 120) }; }
 });
 
 // =============================================================== movement lab data + auto-update
@@ -325,5 +431,5 @@ app.whenReady().then(() => {
 });
 app.on('second-instance', showMain);
 app.on('before-quit', () => { quitting = true; });
-app.on('will-quit', () => { globalShortcut.unregisterAll(); stopOverlay(); });
+app.on('will-quit', () => { globalShortcut.unregisterAll(); stopOverlay(); if (stretchProc) { try { stretchProc.kill(); } catch (_) {} } });
 app.on('window-all-closed', () => { if (quitting || !(ovCfg && ovCfg.on)) app.quit(); });

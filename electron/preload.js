@@ -14,6 +14,16 @@ contextBridge.exposeInMainWorld('stApi', {
   gameDetect: () => ipcRenderer.invoke('game:detect'),
   gamePickExe: () => ipcRenderer.invoke('game:pickExe'),
   gameLaunch: (o) => ipcRenderer.invoke('game:launch', o),
+  // stretched resolution
+  displayInfo: () => ipcRenderer.invoke('display:info'),
+  displayTest: (w, h) => ipcRenderer.invoke('display:test', w, h),
+  displayRestore: () => ipcRenderer.invoke('display:restore'),
+  displayActive: () => ipcRenderer.invoke('display:active'),
+  onDisplayRestored: (cb) => ipcRenderer.on('display:restored', () => cb()),
+  // player stats
+  playerHasKey: () => ipcRenderer.invoke('player:hasKey'),
+  playerSetKey: (k) => ipcRenderer.invoke('player:setKey', k),
+  playerFetch: (kind, q) => ipcRenderer.invoke('player:fetch', kind, q),
   // movement lab
   hubBundled: () => ipcRenderer.invoke('hub:bundled'),
   updateCheck: (lang) => ipcRenderer.invoke('update:check', lang),

@@ -45,7 +45,7 @@
     let layout = null;
     for (const l of (text || '').split(/\r?\n/)) {
       const b = l.match(BIND_RE);
-      if (b) { layout = layout || b[2]; binds[b[3].toUpperCase()] = b[4]; continue; }
+      if (b) { layout = layout || b[2]; binds[ST.normKey(b[3])] = b[4]; continue; }
       const m = l.match(/^\s*"?([\w.+\-]+)"?\s+"?([^"]*?)"?\s*$/);
       if (m && !/^bind/i.test(m[1])) raw[m[1]] = m[2];
     }
@@ -59,13 +59,13 @@
     const layout = ST.cfgGet(text).layout;
     const prefix = `bind_${layout}_standard`;
     const done = new Set();
-    bindChanges = bindChanges || {};
+    { const bc = {}; for (const [k, c] of Object.entries(bindChanges || {})) bc[ST.normKey(k)] = c; bindChanges = bc; }
     const hudNew = Object.entries(bindChanges).some(([, c]) => c && c.includes('gameui_hide'));
     const out = [];
     for (const l of text.split(/\r?\n/)) {
       const b = l.match(BIND_RE);
       if (b) {
-        const K = b[3].toUpperCase();
+        const K = ST.normKey(b[3]);
         if (K in bindChanges) continue; // re-emitted below
         if (hudNew && b[4].includes('gameui_hide')) continue;
         out.push(l);
@@ -77,7 +77,7 @@
     }
     while (out.length && out[out.length - 1] === '') out.pop();
     for (const k of Object.keys(changes)) if (!done.has(k)) out.push(`${k} "${changes[k]}"`);
-    for (const [K, cmd] of Object.entries(bindChanges)) if (cmd) out.push(`${prefix} "${K.length === 1 ? K.toLowerCase() : K}" "${cmd}" 0`);
+    for (const [K, cmd] of Object.entries(bindChanges)) if (cmd) out.push(`${prefix} "${K.length === 1 ? K.toLowerCase() : K}" "${cmd}" 1`);
     return out.join(eol) + eol;
   };
 

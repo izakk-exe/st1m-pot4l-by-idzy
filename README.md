@@ -92,6 +92,14 @@ Tap strafe (wheel up/down = forward), scroll jump, superglide… Every key trigg
 
 ---
 
+## 🏆 Competition — stats, Predator, pro profiles, stretched res
+
+- **My Apex profile** — enter your in-game name and see your rank, RP, level, ladder position, lifetime stats and an RP-over-time chart (history is stored locally).
+- **Top Predator** — the Predator RP cut-off per platform and a live "RP left to Predator" gauge. Add friends, rivals or pros to a local RP ladder.
+  Stats come from the [Apex Legends Status API](https://apexlegendsapi.com/) with **your own free API key**, stored encrypted on your PC. The free API has no global RP Top 500, and the Predator endpoint may not be open to every key (you can then type the cut-off by hand).
+- **Pro profiles** — 11 keyboard-and-mouse players (movement specialists included: Faide, lyr1c, iiTzTimmy, Taxi2g, Leamonhead, YukaF, Mande, Stormen…) transcribed from public [ProSettings.net](https://prosettings.net/) pages: resolution, FOV, Reflex, graphics and movement keys, loaded into your draft in one click. Only settings the app can write *exactly* are applied; the rest is listed as "not applied". Source and date on every card.
+- **Stretched resolution, no black bars** — pick a 4:3 / 16:10 profile and launch Apex from the app: it asks Windows + your graphics driver to stretch the resolution over the whole panel, then restores your display automatically when the game closes. No Steam command, no manual GPU-panel step (the resolution must be exposed by your driver, otherwise create it once as a custom resolution).
+
 ## 💾 Installation
 
 | | |
@@ -107,7 +115,8 @@ Tap strafe (wheel up/down = forward), scroll jump, superglide… Every key trigg
 
 ## 🔒 Trust & privacy
 
-- **No account, no tracking.** The only network calls: an optional fetch of community news/statuses and the update check, both from GitHub.
+- **No account, no tracking.** The only network calls: an optional fetch of community news/statuses and the update check (both from GitHub) and — only if you add your own API key — your stats requests to the Apex Legends Status API.
+- **Stretched resolution is temporary.** The app changes the display mode only for the game session (Windows reverts it when the helper ends) and restores it when Apex closes. Source: [`electron/display-stretch.ps1`](electron/display-stretch.ps1).
 - **Automatic backups** before every change to your files (`%USERPROFILE%\Saved Games\Respawn\Apex`).
 - **The overlay reads locally** only W A S D, Shift, Ctrl, Space, C, the mouse and the wheel — using the same mechanism as OBS input overlays (*Raw Input*). Nothing is recorded or sent. Source: [`electron/input-helper.ps1`](electron/input-helper.ps1).
 - **The trainers measure; they never send anything to the game.**

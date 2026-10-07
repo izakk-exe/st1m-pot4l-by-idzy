@@ -9,6 +9,13 @@
   ST.lang = 'fr';
   ST.L = (fr, en) => (ST.lang === 'fr' ? fr : en);
 
+  // Key names exactly as the game writes them in settings.cfg (e.g. "LSHIFT", "LCTRL", "MWHEELUP").
+  // Older names used by earlier versions of this app are mapped on read, write and import.
+  const KEY_ALIAS = { MWHEELUP: 'MWHEELUP', MWHEELDOWN: 'MWHEELDOWN', SHIFT: 'LSHIFT', CTRL: 'LCTRL', ALT: 'LALT' };
+  // Launch option that removes the game's own black bars on stretched resolutions (confirmed working on 1440×1080).
+  ST.LETTERBOX_ARG = '+mat_letterbox_aspect_min 1.0';
+  ST.normKey =(k) => { k = String(k).toUpperCase(); return KEY_ALIAS[k] || k; };
+
   ST.TABS = [
     { id: 'home', icon: '⌂', fr: 'Accueil', en: 'Home' },
     { id: 'preview', icon: '◉', fr: 'Aperçu avant/après', en: 'Before/after preview' },
@@ -43,7 +50,14 @@
     ];
     const [home, ...rest] = ST.TABS;
     ST.TABS = [Object.assign({}, home, { sec: 'main' })].concat(lab.map((t) => Object.assign({ sec: 'lab' }, t)), rest.map((t) => Object.assign({ sec: 'cfg' }, t)));
-    ST.SECTIONS = { lab: ['MOVEMENT LAB', 'MOVEMENT LAB'], cfg: ['CONFIGURATION', 'CONFIGURATION'] };
+    const comp = [
+      { id: 'me', icon: '☻', fr: 'Mon profil Apex', en: 'My Apex profile' },
+      { id: 'ladder', icon: '♛', fr: 'Top Predator', en: 'Top Predator' },
+      { id: 'pros', icon: '✪', fr: 'Profils de pros', en: 'Pro profiles' },
+      { id: 'stretch', icon: '⬌', fr: 'Résolution étirée', en: 'Stretched res' },
+    ];
+    ST.TABS = ST.TABS.filter((t) => t.sec === 'main').concat(comp.map((t) => Object.assign({ sec: 'comp' }, t)), ST.TABS.filter((t) => t.sec !== 'main'));
+    ST.SECTIONS = { comp: ['COMPÉTITION', 'COMPETITION'], lab: ['MOVEMENT LAB', 'MOVEMENT LAB'], cfg: ['CONFIGURATION', 'CONFIGURATION'] };
   })();
 
   ST.DEFS = [
@@ -143,7 +157,7 @@
       fr: ['Limite de décals', 'Nombre maximal d\'impacts affichés sur les surfaces.'], en: ['Decal limit', 'Maximum number of impact marks shown on surfaces.'] }),
 
     // ---------------- Performance
-    D({ id: 'r_lod_switch_scale', tab: 'performance', type: 'slider', min: 0.6, max: 2, step: 0.1, fps: 'medium', def: '1',
+    D({ id: 'r_lod_switch_scale', tab: 'performance', type: 'slider', min: 0.3, max: 2, step: 0.1, fps: 'medium', def: '1',
       fr: ['Distance des niveaux de détail (LOD)', 'Plus haut = les modèles gardent leur détail plus loin.'],
       en: ['LOD distance scale', 'Higher = models keep their detail further away.'] }),
     D({ id: 'fadeDistScale', tab: 'performance', type: 'select', fps: 'light',
@@ -193,6 +207,8 @@
       fr: ['Couleur du réticule', 'Couleur RVB complète (0–255 par canal) pour le réticule.'], en: ['Reticle color', 'Full RGB color (0–255 per channel) for the reticle.'] }),
     D({ id: 'sound_without_focus', tab: 'game', file: 'profile', type: 'toggle',
       fr: ['Son en arrière-plan', 'Continue le son quand Apex n\'est pas la fenêtre active.'], en: ['Audio when unfocused', 'Keep sound when Apex is not the active window.'] }),
+    D({ id: 'fov_disableAbilityScaling', tab: 'game', file: 'profile', type: 'toggle',
+      fr: ['FOV fixe pendant les capacités', 'Empêche le FOV de changer pendant les capacités et le sprint (« FOV Ability Scaling : Disabled » chez les pros).'], en: ['Fixed FOV during abilities', 'Stops the FOV from changing during abilities and sprinting (“FOV Ability Scaling: Disabled” on pro pages).'] }),
     D({ id: 'telemetry_off', tab: 'game', file: 'profile', type: 'toggle', key: 'pin_opt_in', on: '0', off: '1',
       fr: ['Désactiver la télémétrie (pin_opt_in)', 'Demande au jeu de ne pas envoyer de données d\'usage optionnelles.'], en: ['Disable telemetry (pin_opt_in)', 'Asks the game not to send optional usage data.'] }),
     D({ id: 'gfx_nvnUseLowLatency', tab: 'game', file: 'settings', type: 'toggle',
@@ -313,25 +329,25 @@
       id: 'tapstrafe',
       fr: ['Tap strafe — molette = avancer (2 sens)', 'Molette haut ET bas = avancer (+forward). La touche W reste inchangée : tu peux « scroller » pendant que tu tiens A/D.'],
       en: ['Tap strafe — wheel = forward (both ways)', 'Wheel up AND down = forward (+forward). W stays untouched so you can scroll while holding A/D.'],
-      binds: { MWHEEL_UP: '+forward', MWHEEL_DOWN: '+forward' },
+      binds: { MWHEELUP: '+forward', MWHEELDOWN: '+forward' },
     },
     {
       id: 'tapstrafe_jump',
       fr: ['Tap strafe — molette haut = avancer, bas = saut', 'Variante : molette haut = avancer, molette bas = saut (+jump).'],
       en: ['Tap strafe — wheel up = forward, down = jump', 'Variant: wheel up = forward, wheel down = jump (+jump).'],
-      binds: { MWHEEL_UP: '+forward', MWHEEL_DOWN: '+jump' },
+      binds: { MWHEELUP: '+forward', MWHEELDOWN: '+jump' },
     },
     {
       id: 'scrolljump',
       fr: ['Scroll jump — molette bas = saut', 'Ajoute le saut sur la molette (en plus de ta touche) : pratique pour enchaîner les sauts (slidehop, bunny hop) et répéter un timing très régulier.'],
       en: ['Scroll jump — wheel down = jump', 'Adds jump on the mouse wheel (in addition to your key): handy for chaining jumps (slidehop, bunny hop) with very regular timing.'],
-      binds: { MWHEEL_DOWN: '+jump' },
+      binds: { MWHEELDOWN: '+jump' },
     },
     {
       id: 'superglide',
       fr: ['Superglide — saut molette bas + accroupi souris 4', 'Sépare le saut et l\'accroupi sur deux zones distinctes (molette / bouton latéral) pour mieux contrôler l\'écart d\'une frame. Tes touches actuelles restent actives.'],
       en: ['Superglide — wheel-down jump + mouse 4 crouch', 'Splits jump and crouch onto two distinct areas (wheel / side button) to control the one-frame gap better. Your current keys stay active.'],
-      binds: { MWHEEL_DOWN: '+jump', MOUSE4: '+duck' },
+      binds: { MWHEELDOWN: '+jump', MOUSE4: '+duck' },
     },
   ];
   ST.COMMON_CMDS = ['+forward', '+back', '+moveleft', '+moveright', '+jump', '+duck', '+speed', '+use', '+reload', '+attack', '+zoom', '+ability 1', '+ability 2', '+ability 3', '+scriptcommand1', '+; gameui_hide'];

@@ -74,11 +74,11 @@
     }
     if (isDict(obj.x) && isDict(obj.x.binds)) {
       for (const [k, c] of Object.entries(obj.x.binds)) {
-        if (/^[A-Za-z0-9_]{1,24}$/.test(k) && typeof c === 'string' && /^[\w+;\- ]{1,48}$/.test(c)) binds[k.toUpperCase()] = c; else ignored++;
+        if (/^[A-Za-z0-9_]{1,24}$/.test(k) && typeof c === 'string' && /^[\w+;\- ]{1,48}$/.test(c)) binds[ST.normKey(k)] = c; else ignored++;
       }
     }
     return { values, binds, ignored };
   };
 
-  ST.presetToState = (p) => ST.payloadToState({ v: 1, fov: p.fov, reticle: p.reticle, settings: p.settings });
+  ST.presetToState = (p) => ST.payloadToState({ v: 1, fov: p.fov, reticle: p.reticle, settings: p.settings, x: p.x });
 })();

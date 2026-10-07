@@ -1,0 +1,148 @@
+{
+  "voices": {
+    "en": "Microsoft Mark",
+    "fr": "Microsoft Paul"
+  },
+  "rate": {
+    "en": 1.04,
+    "fr": 1.08
+  },
+  "sets": {
+    "intro": {
+      "lang": "en",
+      "lines": [
+        {
+          "id": "01",
+          "t": 0.95,
+          "max": 2.25,
+          "text": "Apex caps you at one-ten."
+        },
+        {
+          "id": "02",
+          "t": 3.3,
+          "max": 1.2,
+          "text": "We don't."
+        },
+        {
+          "id": "03",
+          "t": 9.0,
+          "max": 1.5,
+          "text": "Stim Portal."
+        },
+        {
+          "id": "04",
+          "t": 10.7,
+          "max": 3.3,
+          "text": "The Apex Legends config editor, and your movement hub."
+        },
+        {
+          "id": "05",
+          "t": 14.7,
+          "max": 2.9,
+          "text": "Your whole setup. One click."
+        },
+        {
+          "id": "06",
+          "t": 17.8,
+          "max": 3.1,
+          "text": "Backed up automatically. Undo anytime."
+        },
+        {
+          "id": "07",
+          "t": 22.0,
+          "max": 4.5,
+          "text": "See the effect before you apply it, on real in-game captures."
+        },
+        {
+          "id": "08",
+          "t": 29.1,
+          "max": 2.7,
+          "text": "Two hundred eighty-seven movement techniques."
+        },
+        {
+          "id": "09",
+          "t": 31.9,
+          "max": 3.1,
+          "text": "A learning path, from rookie to Apex Mover."
+        },
+        {
+          "id": "10",
+          "t": 35.6,
+          "max": 3.3,
+          "text": "Train your superglide, measured to the frame."
+        },
+        {
+          "id": "11",
+          "t": 38.9,
+          "max": 2.5,
+          "text": "And a live keyboard and mouse overlay."
+        },
+        {
+          "id": "12",
+          "t": 41.7,
+          "max": 3.9,
+          "text": "Stim Portal. Free, open source, no ads."
+        },
+        {
+          "id": "13",
+          "t": 45.6,
+          "max": 1.9,
+          "text": "Get it on GitHub."
+        }
+      ]
+    },
+    "tiktok": {
+      "lang": "fr",
+      "lines": [
+        {
+          "id": "01",
+          "t": 0.3,
+          "max": 2.45,
+          "text": "Ton FOV est bloqué à cent dix ?"
+        },
+        {
+          "id": "02",
+          "t": 2.75,
+          "max": 1.3,
+          "text": "Plus maintenant."
+        },
+        {
+          "id": "03",
+          "t": 4.4,
+          "max": 2.8,
+          "text": "Stim Portal, l'outil Apex gratuit."
+        },
+        {
+          "id": "04",
+          "t": 7.3,
+          "max": 3.4,
+          "text": "Toute ta config, en un seul clic."
+        },
+        {
+          "id": "05",
+          "t": 11.2,
+          "max": 3.6,
+          "text": "Compare avant et après, sur de vraies captures du jeu."
+        },
+        {
+          "id": "06",
+          "t": 15.2,
+          "max": 5.3,
+          "text": "Plus de deux cent quatre-vingts techniques de mouvement, un parcours, et un trainer de superglide."
+        },
+        {
+          "id": "07",
+          "t": 20.9,
+          "max": 2.6,
+          "text": "Un overlay clavier et souris pour tes clips."
+        },
+        {
+          "id": "08",
+          "t": 23.7,
+          "max": 4.1,
+          "text": "Gratuit, sans pub, open source. Lien en bio."
+        }
+      ]
+    }
+  }
+}

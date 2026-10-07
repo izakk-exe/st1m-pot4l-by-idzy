@@ -22,9 +22,9 @@
     ov: Object.assign({ on: false, auto: true, anchor: 'bl', ox: 0, oy: 0, scale: 1, opacity: 1, color: '#7cff3a', ring: true, glow: true, shift: false, ctrl: false, space: false, mouse: false, wheel: false, timeline: false, m45: false }, store.get('overlay', {})),
     game: Object.assign({ mode: 'steam', exe: '', useOpts: true }, store.get('game', {})), gameInfo: null,
   };
-  ST.ui = { S, store, esc, L, render: () => render(), toast: (m, o) => toast(m, o), copy: (t) => copy(t), dialog: (h) => dialog(h), closeDialog: () => closeDialog(), oneClick: (st) => oneClick(st), applyChanges: () => applyChanges(), changes: () => changes() };
+  ST.ui = { S, store, esc, L, render: () => render(), toast: (m, o) => toast(m, o), copy: (t) => copy(t), dialog: (h) => dialog(h), closeDialog: () => closeDialog(), oneClick: (st) => oneClick(st), applyChanges: () => applyChanges(), changes: () => changes(), mergeState: (st) => mergeState(st), launchGame: (x) => launchGame(x), draft: () => S.draft };
   ST.packs = { apply: (id) => { const q = ST.QUICK_BINDS.find((x) => x.id === id); return q ? oneClick({ values: {}, binds: q.binds }) : null; } };
-  ST.lang = store.get('lang', navigator.language && navigator.language.startsWith('fr') ? 'fr' : 'en');
+  ST.lang = store.get('lang', 'en'); // English by default; the language switch is in System → Appearance
 
   // ---------- helpers
   async function copy(text) {
@@ -275,7 +275,7 @@
       $('#modal').onclick = (e) => { const x = e.target.dataset.x; if (x !== undefined || e.target.id === 'modal') { closeDialog(); res(x === undefined || x === 'c' ? -1 : +x); } };
     });
   }
-  async function launchGame() {
+  async function launchGame(extra) {
     if (!window.stApi || !window.stApi.gameLaunch) return toast(L('Le lancement est disponible dans l\'application Windows.', 'Launching is available in the Windows app.'), { bad: true });
     if (!S.gameInfo) await refreshGameInfo();
     if (changes().length) {
@@ -283,8 +283,10 @@
       if (c === -1) return;
       if (c === 0 && !(await applyChanges())) return;
     }
-    const r = await window.stApi.gameLaunch({ mode: S.game.mode, exe: gameExe(), args: S.game.useOpts ? launchString() : '' });
-    if (r && r.ok) return toast(L('Lancement d\'Apex Legends…', 'Launching Apex Legends…'));
+    const r = await window.stApi.gameLaunch({ mode: S.game.mode, exe: gameExe(), args: (() => { const a = S.game.useOpts ? launchString() : ''; return extra && extra.stretch && !a.includes(ST.LETTERBOX_ARG) ? (a + ' ' + ST.LETTERBOX_ARG).trim() : a; })(), stretch: extra && extra.stretch });
+    if (r && r.ok && r.stretch && r.scalingCode) toast(L('Windows n\'a pas accepté la mise à l\'échelle « plein écran » : des bandes noires peuvent rester. Règle « Mise à l\'échelle : Plein écran, effectuée sur le GPU » dans le panneau NVIDIA / AMD.', 'Windows did not accept “full-screen” scaling: black bars may remain. Set “Scaling: Full-screen, performed on GPU” in the NVIDIA / AMD panel.'), { bad: true });
+    if (r && r.ok) return toast(r.stretch ? L('Écran étiré : lancement d\'Apex Legends… (restauré automatiquement à la fermeture du jeu)', 'Display stretched: launching Apex Legends… (restored automatically when the game closes)') : L('Lancement d\'Apex Legends…', 'Launching Apex Legends…'));
+    if (r && /^stretch:/.test(r.error || '')) return toast(L('Résolution étirée impossible : ', 'Stretched resolution failed: ') + r.error.slice(8) + L(' — voir l\'onglet Résolution étirée.', ' — see the Stretched resolution tab.'), { bad: true });
     if (r && r.error === 'running') return toast(L('Apex est déjà lancé.', 'Apex is already running.'), { bad: true });
     if (r && r.error === 'exe-missing') { S.tab = 'launch'; render(); return toast(L('r5apex.exe introuvable : choisis-le dans « Lancer le jeu ».', 'r5apex.exe not found: pick it in “Launch the game”.'), { bad: true }); }
     toast(L('Lancement impossible.', 'Could not launch.') + (r && r.error ? ' ' + r.error : ''), { bad: true });
@@ -367,45 +369,20 @@
       <div class="row-btns">${opts.map((o) => `<button class="btn" data-act="res" data-w="${o.w}" data-h="${o.h}">${o.w}×${o.h} <span class="tag">${esc(o.name)}</span></button>`).join('')}</div></div>`;
   }
 
+  document.addEventListener('error', (e) => { const t = e.target; if (t && t.classList && t.classList.contains('rm-on-error')) t.remove(); }, true);
   function pageHome() {
     const files = ['video', 'profile', 'settings'];
     const fname = { video: 'videoconfig.txt', profile: 'profile.cfg', settings: 'settings.cfg' };
-    const found = files.filter((k) => S.texts[k]).length;
     const demo = S.be.kind === 'demo' && !window.stApi;
-    const heavy = ST.DEFS.filter((d) => d.fps === 'heavy' && d.type === 'toggle' && ST.defVal(d, S.draft.values) === d.on);
-    const tsOn = ST.QUICK_BINDS[0].binds && Object.entries(ST.QUICK_BINDS[0].binds).every(([k, c]) => S.cur.binds[k] === c);
-    return `<div class="page">
-      ${demo ? `<div class="note" style="margin-bottom:16px">${L('<b>Mode démo</b> — aucun fichier Apex réel n\'est modifié. ', '<b>Demo mode</b> — no real Apex file is modified. ')}${ST.fsaSupported() ? `<button class="btn sm" data-act="fsa">${L('Choisir le dossier Apex', 'Pick the Apex folder')}</button>` : L('Utilise l\'application Windows pour éditer tes vrais fichiers.', 'Use the Windows app to edit your real files.')}</div>` : ''}
-      <div class="hero">${LOGO}<div>
-        <h1>ST1M PORT4L</h1><div class="tag" style="display:inline-block;color:var(--gold);border-color:var(--line)">by idZy</div>
-        <p>${L('L\'éditeur de config Apex Legends de la communauté : débloque les réglages cachés (FOV 120, ombres, textures, réticule RGB…), applique ton setup en un clic et sauvegarde tout automatiquement.', 'The community Apex Legends config editor: unlock hidden settings (FOV 120, shadows, textures, RGB reticle…), apply your setup in one click and back everything up automatically.')}</p>
-        <div class="row-btns">
-          <button class="btn gold big" data-act="one-st1m">⚡ ${L('Appliquer le setup ST1M', 'Apply the ST1M setup')}</button>
-          <button class="btn big" data-act="one-tap">${tsOn ? '✔ ' : '🎯 '}${L('Binds Tap Strafe', 'Tap Strafe binds')}</button>
-          <button class="btn big" data-act="copy-mine">📋 ${L('Copier mes settings', 'Copy my settings')}</button>
-          <button class="btn big" data-act="launch">▶ ${L('Lancer Apex', 'Launch Apex')}</button>
-        </div>
-        <div class="chips">${files.map((k) => `<span class="pill ${S.texts[k] ? 'ok' : 'warn'}"><i></i>${fname[k]}${k === 'video' && S.lock ? ' 🔒' : ''}</span>`).join('')}<span class="pill"><i></i>${found}/3 ${L('fichiers trouvés', 'files found')}</span></div>
-      </div></div>
-
-      <h2>MOVEMENT LAB</h2>
-      <div class="grid">${(() => { const st = ST.hub ? ST.hub.stats() : null; return [
-        ['techs', '☰', L('Catalogue des techniques', 'Technique catalogue'), st ? `${st.total} ${L('techniques', 'techniques')} · ${st.mastered} ${L('maîtrisées', 'mastered')}` : ''],
-        ['path', '⇪', L('Parcours de progression', 'Learning path'), st ? `${st.level.name} · ${st.xp} XP` : ''],
-        ['training', '◔', L('Superglide Trainer & rythme', 'Superglide Trainer & rhythm'), L('Mesure tes inputs, rien n\'est envoyé au jeu', 'Measures your inputs, nothing is sent to the game')],
-        ['legends', '★', L('Légendes & quiz', 'Legends & quiz'), L('Quelle légende te correspond ?', 'Which legend suits you?')]].map((t) => `<button class="tile" data-act="tab" data-v="${t[0]}"><b>${t[1]} ${esc(t[2])}</b><span>${esc(t[3])}</span></button>`).join(''); })()}</div>
-      <h2>${L('Presets', 'Presets')}</h2>
-      <div class="grid">${ST.PRESETS.map((p) => `<button class="tile${p.accent ? ' accent' : ''}" data-act="preset" data-id="${p.id}"><b>${esc(p[ST.lang][0])}</b><span>${esc(p[ST.lang][1])}</span></button>`).join('')}</div>
-
-      <h2>${L('Code de partage', 'Share code')}</h2>
-      <div class="two">
-        <div class="card pad"><span class="lbl">${L('Code du setup ST1M (copie-le ou partage-le)', 'ST1M setup code (copy or share it)')}</span><div class="mono">${esc(S.code || '…')}</div>
-          <div class="row-btns" style="margin-top:12px"><button class="btn sm" data-act="copy-st1m">${L('Copier', 'Copy')}</button><button class="btn sm gold" data-act="one-st1m">${L('Appliquer en 1 clic', 'Apply in 1 click')}</button></div></div>
-        <div class="card pad"><span class="lbl">${L('Coller un code (CE1: ou SP1:)', 'Paste a code (CE1: or SP1:)')}</span><textarea class="inp" id="home-code" placeholder="CE1:eNp1…"></textarea>
-          <div class="row-btns" style="margin-top:12px"><button class="btn sm" data-act="import-home">${L('Importer', 'Import')}</button><button class="btn sm gold" data-act="import-home-now">${L('Importer + appliquer', 'Import + apply')}</button></div></div>
-      </div>
-
-      ${heavy.length ? `<h2>${L('Conseils FPS', 'FPS tips')}</h2><div class="card pad"><p class="lead" style="margin-bottom:12px">${L('Réglages coûteux actuellement activés :', 'Costly settings currently enabled:')} ${heavy.map((d) => `<span class="tag heavy">${esc(defLabel(d))}</span>`).join(' ')}</p><button class="btn sm" data-act="cut-heavy">${L('Tous les couper', 'Turn them all off')}</button></div>` : ''}
+    const nav = [['me', L('Mon profil', 'My profile')], ['ladder', 'Top Predator'], ['pros', L('Profils de pros', 'Pro profiles')], ['stretch', L('Résolution étirée', 'Stretched res')], ['techs', L('Catalogue', 'Catalogue')], ['training', L('Entraînement', 'Training')]];
+    return `<div class="page home">
+      <div class="h-shade"></div>
+      <div class="h-title par" style="--k:-14"><span class="t1">ST1M</span><span class="t2">PORT4L</span><small>${L('Ton setup Apex, en un clic', 'Your Apex setup, in one click')}</small></div>
+      <div class="h-heroart par" style="--k:30"><img class="h-hero rm-on-error" src="img/home-hero.png" alt=""></div>
+      <div class="h-edge">APEX LEGENDS · CONFIG EDITOR</div>
+      <nav class="h-side par" style="--k:6">${nav.map((n, i) => `<button class="h-item" data-act="tab" data-v="${n[0]}"><i>${String(i + 1).padStart(2, '0')}</i><span>${esc(n[1])}</span></button>`).join('')}</nav>
+      <div class="h-cta"><button class="btn gold big" data-act="one-st1m">${L('Appliquer le setup ST1M', 'Apply the ST1M setup')}</button><button class="h-play" data-act="launch" title="${L('Lancer Apex', 'Launch Apex')}" aria-label="${L('Lancer Apex', 'Launch Apex')}"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button></div>
+      <div class="h-foot"><span>by idZy · v${esc(ST.VERSION)}</span><span class="h-dots">${files.map((k) => `<i class="${S.texts[k] ? 'ok' : ''}" title="${fname[k]}"></i>`).join('')}</span>${demo ? `<span class="h-demo">${L('Mode démo', 'Demo mode')}</span>` : ''}</div>
     </div>`;
   }
 
@@ -441,6 +418,8 @@
     if (l.novid) p.push('-novid');
     if (l.lobby) p.push('+lobby_max_fps 0');
     if (l.thread) p.push('-no_render_on_input_thread');
+    if (l.letterbox) p.push(ST.LETTERBOX_ARG);
+    if (l.nostretch) p.push('+mat_no_stretching 1');
     if (l.cap) p.push('+fps_max ' + Math.min(300, Math.max(0, parseInt(l.capv, 10) || 0)));
     if (l.high) p.push('-high');
     if (l.fps) p.push('+cl_showfps 1');
@@ -457,6 +436,8 @@
       <h2>${L('Options', 'Options')}</h2>
       <div class="card">
         ${sw('novid', 'Passer l\'intro', 'Skip intro video', 'Saute la vidéo d\'intro au démarrage (-novid).', 'Skips the startup intro video (-novid).')}
+        ${sw('letterbox', 'Anti bandes noires (letterbox)', 'No black bars (letterbox)', 'Supprime les bandes noires du jeu en résolution étirée (+mat_letterbox_aspect_min 1.0, confirmé par un joueur en 1440×1080). Ajoutée automatiquement par « Lancer Apex sans bandes noires ».', 'Removes the game\'s own black bars on stretched resolutions (+mat_letterbox_aspect_min 1.0, confirmed by a player on 1440×1080). Added automatically by “Launch Apex without black bars”.')}
+        ${sw('nostretch', 'mat_no_stretching (expérimental)', 'mat_no_stretching (experimental)', 'Option signalée par la communauté comme pouvant corriger des soucis de résolution étirée (+mat_no_stretching 1). Non éprouvée : désactive-la si rien ne change.', 'Community-reported option that may fix stretched-resolution issues (+mat_no_stretching 1). Unproven: turn it off if nothing changes.')}
         ${sw('lobby', 'FPS du lobby débloqués', 'Uncapped lobby FPS', 'Retire la limite de FPS dans le lobby (+lobby_max_fps 0).', 'Removes the lobby FPS limit (+lobby_max_fps 0).')}
         ${sw('thread', 'Optimisation du thread de rendu', 'Render thread optimisation', 'Ne fait pas le rendu sur le thread des inputs (-no_render_on_input_thread).', 'Does not render on the input thread (-no_render_on_input_thread).')}
         ${sw('high', 'Priorité processus haute', 'High process priority', '-high', '-high')}
@@ -471,6 +452,8 @@
   function pageProfiles() {
     const profs = store.get('profiles', []);
     return `<div class="page">${pageTitle(L('Profils & partage', 'Profiles & sharing'), L('Sauvegarde tes configs, bascule en un clic, partage-les avec la communauté.', 'Save your configs, switch in one click, share them with the community.'))}
+      <h2>${L('Presets', 'Presets')}</h2>
+      <div class="grid">${ST.PRESETS.map((p) => `<button class="tile${p.accent ? ' accent' : ''}" data-act="preset" data-id="${p.id}"><b>${esc(p[ST.lang][0])}</b><span>${esc(p[ST.lang][1])}</span></button>`).join('')}</div>
       <h2>${L('Mes profils', 'My profiles')}</h2>
       <div class="card pad"><div class="row-btns"><input class="inp" id="pname" placeholder="${L('Nom du profil (ex : Ranked, LAN…)', 'Profile name (e.g. Ranked, LAN…)')}" style="flex:1;min-width:200px" maxlength="40"><button class="btn gold" data-act="p-save">${L('Enregistrer l\'état actuel', 'Save current state')}</button></div>
       <div class="plist" style="margin-top:8px">${profs.length ? profs.map((p, i) => `<div><b>${esc(p.name)}</b><button class="btn sm" data-act="p-load" data-i="${i}">${L('Charger', 'Load')}</button><button class="btn sm gold" data-act="p-apply" data-i="${i}">${L('Appliquer', 'Apply')}</button><button class="btn sm" data-act="p-copy" data-i="${i}">${L('Code', 'Code')}</button><button class="btn sm danger" data-act="p-del" data-i="${i}">✕</button></div>`).join('') : `<p class="lead" style="margin:12px 0 0">${L('Aucun profil enregistré.', 'No saved profile.')}</p>`}</div></div>
@@ -482,7 +465,7 @@
 
   function pageSystem() {
     const files = [['video', 'videoconfig.txt'], ['profile', 'profile.cfg'], ['settings', 'settings.cfg']];
-    const bg = store.get('bg', 'hole');
+    const bg = store.get('bg', 'video');
     return `<div class="page">${pageTitle(L('Système', 'System'), L('Dossier Apex, sauvegardes, verrou de config, langue et apparence.', 'Apex folder, backups, config lock, language and look.'))}
       <h2>${L('Dossier Apex', 'Apex folder')}</h2>
       <div class="card pad"><div class="mono">${esc(S.info.root || '—')}</div>
@@ -495,7 +478,7 @@
       <div class="card"><div class="set"><div><h4>${L('Verrouiller videoconfig.txt', 'Lock videoconfig.txt')}</h4><p>${L('Passe le fichier en lecture seule après application pour qu\'Apex ne réinitialise pas tes réglages. Désactive avant de modifier dans le jeu.', 'Makes the file read-only after applying so Apex cannot reset your settings. Turn off before changing options in-game.')}</p></div><div class="ctl"><button class="switch${S.lock ? ' on' : ''}" data-act="lock"></button></div></div></div>
       <h2>${L('Apparence', 'Appearance')}</h2>
       <div class="card"><div class="set"><div><h4>${L('Langue', 'Language')}</h4></div><div class="ctl"><div class="seg"><button class="${ST.lang === 'fr' ? 'on' : ''}" data-act="lang" data-v="fr">Français</button><button class="${ST.lang === 'en' ? 'on' : ''}" data-act="lang" data-v="en">English</button></div></div></div>
-        <div class="set"><div><h4>${L('Arrière-plan', 'Background')}</h4><p>${L('Fond flou animé (trou noir), ton image, ou rien (économise le GPU).', 'Animated blurred background (black hole), your own image, or none (saves GPU).')}</p></div><div class="ctl"><div class="seg"><button class="${bg === 'hole' ? 'on' : ''}" data-act="bg" data-v="hole">${L('Animé', 'Animated')}</button><button class="${bg === 'image' ? 'on' : ''}" data-act="bg" data-v="image">${L('Image', 'Image')}</button><button class="${bg === 'off' ? 'on' : ''}" data-act="bg" data-v="off">Off</button></div><button class="btn sm" data-act="bg-pick">${L('Choisir une image', 'Choose image')}</button><input type="file" id="bgfile" accept="image/*" hidden></div></div></div>
+        <div class="set"><div><h4>${L('Arrière-plan', 'Background')}</h4><p>${L('Vidéo, paysage animé, trou noir, ton image, ou rien (économise le GPU).', 'Video, animated landscape, black hole, your own image, or nothing (saves GPU).')}</p></div><div class="ctl"><div class="seg"><button class="${bg === 'video' ? 'on' : ''}" data-act="bg" data-v="video">${L('Vidéo', 'Video')}</button><button class="${bg === 'landscape' ? 'on' : ''}" data-act="bg" data-v="landscape">${L('Paysage', 'Landscape')}</button><button class="${bg === 'hole' ? 'on' : ''}" data-act="bg" data-v="hole">${L('Trou noir', 'Black hole')}</button><button class="${bg === 'image' ? 'on' : ''}" data-act="bg" data-v="image">${L('Image', 'Image')}</button><button class="${bg === 'off' ? 'on' : ''}" data-act="bg" data-v="off">Off</button></div><button class="btn sm" data-act="bg-pick">${L('Choisir une image', 'Choose image')}</button><input type="file" id="bgfile" accept="image/*" hidden></div></div></div>
       <h2>${L('À propos', 'About')}</h2>
       <div class="card pad"><p class="lead" style="margin:0"><b>ST1M PORT4L</b> by idZy — v${ST.VERSION}. ${L('Basé sur l\'idée de', 'Inspired by')} <i>Config Editor for Apex Legends</i> (MIT). ${L('Non affilié à Respawn ni EA. Utilisation à tes risques ; les sauvegardes sont automatiques.', 'Not affiliated with Respawn or EA. Use at your own risk; backups are automatic.')}</p></div></div>`;
   }
@@ -503,11 +486,11 @@
   // ---------- chrome
   function renderSide() {
     $('#side').innerHTML = `<div class="brand">${LOGO}<div><b>ST1M PORT4L</b><small>by idZy</small></div></div>` +
-      ST.TABS.map((t, i) => (i > 0 && t.sec !== ST.TABS[i - 1].sec && ST.SECTIONS[t.sec] ? `<div class="navsec">${ST.SECTIONS[t.sec][0]}</div>` : '') + `<button class="nav${S.tab === t.id ? ' on' : ''}" data-act="tab" data-v="${t.id}"><i>${t.icon}</i><span>${esc(tabLabel(t))}</span>${tabHasChanges(t.id) ? '<span class="dot"></span>' : ''}</button>`).join('') +
+      ST.TABS.map((t, i) => (i > 0 && t.sec !== ST.TABS[i - 1].sec && ST.SECTIONS[t.sec] ? `<div class="navsec">${ST.SECTIONS[t.sec][ST.lang === 'fr' ? 0 : 1]}</div>` : '') + `<button class="nav${S.tab === t.id ? ' on' : ''}" data-act="tab" data-v="${t.id}"><i>${t.icon}</i><span>${esc(tabLabel(t))}</span>${tabHasChanges(t.id) ? '<span class="dot"></span>' : ''}</button>`).join('') +
       `<div class="side-foot">${L('Ferme Apex avant d\'appliquer.', 'Close Apex before applying.')}<br>MIT · idZy${ST.donateUrl && ST.donateUrl() ? ` · <a href="${esc(ST.donateUrl())}" target="_blank" rel="noopener noreferrer">☕ ${L('Soutenir', 'Support')}</a>` : ''}</div>`;
   }
   function renderTop() {
-    $('#top').innerHTML = `<div class="search" data-act="palette">🔎 <span>${L('Rechercher un réglage ou une action…', 'Search a setting or action…')}</span><span class="kbd">Ctrl K</span></div><span class="spacer"></span><button class="btn gold sm" data-act="launch">▶ ${L('Lancer Apex', 'Launch Apex')}</button>
+    $('#top').innerHTML = `<div class="search" data-act="palette">🔎 <span>${L('Rechercher un réglage ou une action…', 'Search a setting or action…')}</span><span class="kbd">Ctrl K</span></div><span class="spacer"></span>${S.tab === 'home' ? '' : `<button class="btn gold sm" data-act="launch">▶ ${L('Lancer Apex', 'Launch Apex')}</button>`}
       <span class="pill ${S.be.kind === 'demo' ? 'warn' : S.texts.video ? 'ok' : 'bad'}"><i></i>${S.be.kind === 'demo' ? L('Mode démo', 'Demo mode') : S.texts.video ? L('Apex détecté', 'Apex detected') : L('Dossier introuvable', 'Folder not found')}</span>`;
   }
   function renderPending() {
@@ -517,14 +500,19 @@
   }
   function render() {
     const view = $('#view'), top = view.scrollTop;
+    const entering = S._shown !== S.tab; S._shown = S.tab;
+    view.classList.toggle('enter', entering);
+    view.dataset.tab = document.body.dataset.tab = S.tab;
     renderSide(); renderTop(); renderPending();
     const tab = ST.TABS.find((t) => t.id === S.tab);
-    const ext = (ST.hub && ST.hub.pages[S.tab]) || (ST.trainer && ST.trainer.pages[S.tab]);
+    const ext = (ST.hub && ST.hub.pages[S.tab]) || (ST.trainer && ST.trainer.pages[S.tab]) || (ST.pro && ST.pro.pages[S.tab]);
     view.innerHTML = ext ? ext() : S.tab === 'home' ? pageHome() : S.tab === 'preview' ? pagePreview() : S.tab === 'overlay' ? pageOverlay() : S.tab === 'binds' ? pageBinds() : S.tab === 'launch' ? pageLaunch() : S.tab === 'profiles' ? pageProfiles() : S.tab === 'system' ? pageSystem() : pageSettings(tab);
-    view.scrollTop = S.flash ? 0 : top;
+    view.scrollTop = S.flash ? 0 : (entering ? 0 : top);
     if (S.flash) { const r = view.querySelector(`[data-row="${S.flash}"]`); if (r) { r.scrollIntoView({ block: 'center' }); r.classList.add('hit'); } S.flash = null; }
     document.documentElement.lang = ST.lang;
+    if (ST.bgFocus) { if (S.tab === 'home') { const r = view.getBoundingClientRect(); ST.bgFocus((r.left + r.width / 2) / innerWidth, (r.top + r.height / 2) / innerHeight); } else ST.bgFocus(); }
     if (S.tab === 'training' && ST.trainer) ST.trainer.after();
+    if (ST.pro && ST.pro.after) ST.pro.after();
     if (S.tab === 'preview') mountTabPreview();
     if (S.tab === 'overlay') initOverlayPreview();
     if (S.tab === 'launch' && !S.gameInfo) refreshGameInfo().then(() => S.tab === 'launch' && render());
@@ -552,7 +540,6 @@
       { t: '🎯 ' + L('Tap strafe : binds en 1 clic', 'Tap strafe: binds in 1 click'), k: 'tap strafe binds molette wheel', run: () => oneClick({ values: {}, binds: ST.QUICK_BINDS[0].binds }), tag: L('action', 'action') },
       { t: '▶ ' + L('Lancer Apex Legends', 'Launch Apex Legends'), k: 'launch lancer jouer play', run: () => launchGame(), tag: L('action', 'action') },
       { t: '◎ ' + L('Activer / couper l\'overlay clavier', 'Toggle keyboard overlay'), k: 'overlay clavier keyboard wasd', run: () => { S.ov.on = !S.ov.on; ovPush(); if (S.tab === 'overlay') render(); }, tag: L('action', 'action') },
-      { t: '📋 ' + L('Copier mes settings', 'Copy my settings'), k: 'copy code partage share', run: () => act.copyMine(), tag: L('action', 'action') },
     ];
     for (const p of ST.PRESETS) items.push({ t: L('Preset : ', 'Preset: ') + p[ST.lang][0], k: 'preset ' + p.id, run: () => { mergeState(ST.presetToState(p)); render(); }, tag: 'preset' });
     for (const t of ST.TABS) items.push({ t: tabLabel(t), k: t.id, run: () => { S.tab = t.id; render(); }, tag: L('page', 'page') });
@@ -679,9 +666,9 @@
   };
 
   function applyBg() {
-    const m = store.get('bg', 'hole');
+    const m = store.get('bg', 'video');
     if (m === 'image') { const d = store.get('bgdata', null); if (d) return ST.setBackground('image', d); }
-    ST.setBackground(m === 'image' ? 'hole' : m);
+    ST.setBackground(m === 'image' ? 'video' : m);
   }
 
   // ---------- events
@@ -732,11 +719,11 @@
   }
 
   // key capture for binds
-  const KEYMAP = { Space: 'SPACE', ShiftLeft: 'SHIFT', ShiftRight: 'SHIFT', ControlLeft: 'CTRL', ControlRight: 'CTRL', AltLeft: 'ALT', AltRight: 'ALT', Tab: 'TAB', Enter: 'ENTER', Backquote: '`', CapsLock: 'CAPSLOCK', ArrowUp: 'UPARROW', ArrowDown: 'DOWNARROW', ArrowLeft: 'LEFTARROW', ArrowRight: 'RIGHTARROW', Backspace: 'BACKSPACE', Insert: 'INS', Delete: 'DEL', Home: 'HOME', End: 'END', PageUp: 'PGUP', PageDown: 'PGDN' };
+  const KEYMAP = { Space: 'SPACE', ShiftLeft: 'LSHIFT', ShiftRight: 'RSHIFT', ControlLeft: 'LCTRL', ControlRight: 'RCTRL', AltLeft: 'LALT', AltRight: 'RALT', Tab: 'TAB', Enter: 'ENTER', Backquote: '`', CapsLock: 'CAPSLOCK', ArrowUp: 'UPARROW', ArrowDown: 'DOWNARROW', ArrowLeft: 'LEFTARROW', ArrowRight: 'RIGHTARROW', Backspace: 'BACKSPACE', Insert: 'INS', Delete: 'DEL', Home: 'HOME', End: 'END', PageUp: 'PGUP', PageDown: 'PGDN' };
   function captured(name) {
     const what = S.capturing; S.capturing = null;
-    if (what === 'hud') { for (const [k, c] of Object.entries(S.draft.binds)) if (c.includes('gameui_hide')) delete S.draft.binds[k]; S.draft.binds[name.toUpperCase()] = ST.HUD_CMD; }
-    else S.newKey = name.toUpperCase();
+    if (what === 'hud') { for (const [k, c] of Object.entries(S.draft.binds)) if (c.includes('gameui_hide')) delete S.draft.binds[k]; S.draft.binds[ST.normKey(name)] = ST.HUD_CMD; }
+    else S.newKey = ST.normKey(name);
     render();
   }
   function keyName(e) {
@@ -759,7 +746,7 @@
   }, true);
   document.addEventListener('input', (e) => { if (e.target.id === 'pq') { S.palette.q = e.target.value; S.palette.sel = 0; paletteDraw(); } });
   document.addEventListener('mousedown', (e) => { if (S.capturing && !e.target.closest('[data-act="cap"]')) { if (e.button >= 3) { e.preventDefault(); captured('MOUSE' + (e.button - 1)); } else if (e.button === 1) { e.preventDefault(); captured('MOUSE3'); } } }, true);
-  document.addEventListener('wheel', (e) => { if (S.capturing) { e.preventDefault(); captured(e.deltaY < 0 ? 'MWHEEL_UP' : 'MWHEEL_DOWN'); } }, { passive: false, capture: true });
+  document.addEventListener('wheel', (e) => { if (S.capturing) { e.preventDefault(); captured(e.deltaY < 0 ? 'MWHEELUP' : 'MWHEELDOWN'); } }, { passive: false, capture: true });
 
   const fwd = (down) => (e) => { if (S.tab !== 'overlay' || S.capturing) return; const vk = VKS[e.code]; if (vk) ovPost({ input: { t: 'K', vk, down } }); };
   document.addEventListener('keydown', fwd(true)); document.addEventListener('keyup', fwd(false));
@@ -768,6 +755,9 @@
   document.addEventListener('wheel', (e) => { if (S.tab === 'overlay' && e.target.closest('.ovprev')) { ovPost({ input: { t: 'W', dir: e.deltaY < 0 ? 1 : -1 } }); e.preventDefault(); } }, { passive: false });
   document.addEventListener('mouseup', (e) => { if (S.tab === 'overlay' && e.button < 5) ovPost({ input: { t: 'B', b: e.button === 1 ? 3 : e.button === 2 ? 2 : e.button === 0 ? 1 : e.button + 1, down: false } }); });
   if (window.stApi && window.stApi.onOverlayState) window.stApi.onOverlayState((c) => { if (c) { S.ov.on = !!c.on; store.set('overlay', S.ov); if (S.tab === 'overlay') render(); } });
+
+  // home poster: layers drift with the pointer (CSS reads --mx / --my)
+  document.addEventListener('mousemove', (e) => { if (S.tab !== 'home') return; const st = document.documentElement.style; st.setProperty('--mx', (e.clientX / innerWidth - 0.5).toFixed(3)); st.setProperty('--my', (e.clientY / innerHeight - 0.5).toFixed(3)); }, { passive: true });
 
   // ---------- boot
   (async function boot() {

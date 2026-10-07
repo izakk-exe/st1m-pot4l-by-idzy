@@ -1,16 +1,37 @@
 {
   "version": 1,
-  "updated": "2026-10-06",
+  "updated": "2026-10-07",
   "season": "",
-  "_help": "Fichier alimenté par la communauté via pull requests. statuses: { \"<id technique>\": { \"s\": \"ok|patched|broken\", \"season\": \"S27\", \"note\": \"...\" } }. videos: { \"<id technique>\": [ { \"t\": \"Titre\", \"u\": \"https://www.youtube.com/watch?v=...\", \"by\": \"Pseudo\" } ] }. Les ids sont ceux affichés dans l'app (ex: superglide, tap-strafe).",
+  "_help": "Community-fed file (pull requests welcome). statuses: { \"<technique id>\": { \"s\": \"ok|patched|broken\", \"season\": \"S27\", \"note\": \"...\" } }. videos: { \"<technique id>\": [ { \"t\": \"Title\", \"u\": \"https://www.youtube.com/watch?v=...\", \"by\": \"Name\" } ] }. The ids are the ones shown in the app (e.g. superglide, tap-strafe).",
   "statuses": {},
   "videos": {},
   "guides": [
-    { "t": "Apex Movement Wiki — le catalogue complet des techniques", "u": "https://apexmovement.tech/wiki/catalog", "by": "Apex Movement Wiki" },
-    { "t": "Apex Movement Wiki — articles : réglages, matériel, entraînement", "u": "https://apexmovement.tech/wiki/articles", "by": "Apex Movement Wiki" }
+    {
+      "t": "Apex Movement Wiki — the full technique catalogue",
+      "u": "https://apexmovement.tech/wiki/catalog",
+      "by": "Apex Movement Wiki"
+    },
+    {
+      "t": "Apex Movement Wiki — articles: settings, hardware, training",
+      "u": "https://apexmovement.tech/wiki/articles",
+      "by": "Apex Movement Wiki"
+    }
   ],
   "news": [
-    { "d": "2026-10-06", "t": "Movement Lab : catalogue, parcours et entraîneurs", "b": "Le catalogue de plus de 280 techniques (avec tes propres touches), le parcours de progression, les fiches légendes et le quiz, le Superglide Trainer et les entraîneurs de rythme arrivent dans ST1M PORT4L." },
-    { "d": "2026-10-06", "t": "Packs de binds et overlay mouvement", "b": "Des packs de binds en un clic pour les techniques (tap strafe, scroll jump, superglide) et un overlay qui affiche saut, accroupi et molette." }
+    {
+      "d": "2026-10-07",
+      "t": "New look, pro profiles and stretched resolution",
+      "b": "A glass redesign with a video background, one-click pro profiles (pick resolution, graphics, keys), a live stretched-resolution preview with a no-black-bars launcher, your Apex stats and a Top Predator gauge."
+    },
+    {
+      "d": "2026-10-06",
+      "t": "Movement Lab: catalogue, learning path and trainers",
+      "b": "The catalogue of 280+ techniques (with your own keys), the learning path, legend sheets and quiz, the Superglide Trainer and the rhythm trainers are now in ST1M PORT4L."
+    },
+    {
+      "d": "2026-10-06",
+      "t": "Bind packs and movement overlay",
+      "b": "One-click bind packs for techniques (tap strafe, scroll jump, superglide) and an overlay showing jump, crouch and the mouse wheel."
+    }
   ]
 }

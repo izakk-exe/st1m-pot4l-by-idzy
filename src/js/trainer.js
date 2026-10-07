@@ -11,11 +11,12 @@
   const $ = (s) => document.querySelector(s);
 
   // ------------------------------------------------------------------ input bindings (key / wheel / mouse button)
-  const CODE_OF = { SPACE: 'Space', CTRL: 'ControlLeft', SHIFT: 'ShiftLeft', ALT: 'AltLeft', TAB: 'Tab', ENTER: 'Enter', '`': 'Backquote' };
+  const CODE_OF = { SPACE: 'Space', LCTRL: 'ControlLeft', LSHIFT: 'ShiftLeft', LALT: 'AltLeft', TAB: 'Tab', ENTER: 'Enter', '`': 'Backquote' };
   function descFromApex(name) {
     if (!name) return null;
-    if (name === 'MWHEEL_UP') return { k: 'wheel', v: 'up' };
-    if (name === 'MWHEEL_DOWN') return { k: 'wheel', v: 'down' };
+    name = ST.normKey(name);
+    if (name === 'MWHEELUP') return { k: 'wheel', v: 'up' };
+    if (name === 'MWHEELDOWN') return { k: 'wheel', v: 'down' };
     const m = name.match(/^MOUSE(\d)$/); if (m) return { k: 'mouse', v: { 3: 1, 4: 3, 5: 4 }[+m[1]] };
     if (CODE_OF[name]) return { k: 'key', v: CODE_OF[name] };
     if (/^[A-Z]$/.test(name)) return { k: 'key', v: 'Key' + name };
