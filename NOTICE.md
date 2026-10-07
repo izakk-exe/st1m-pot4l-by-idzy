@@ -31,3 +31,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Background video
+
+`src/previews/home-bg.mp4` — 3D render loop found on Pinterest (watermark: "PUSA_STARLIGHT"); the author could not be
+confirmed and its licence has not been verified. It is a purely decorative backdrop that can be replaced by any video from
+System → Appearance → Choose video. If you are the author and want it credited differently or removed, open an issue and it
+will be taken down. Apex Legends and related names are trademarks of Electronic Arts; this project is not affiliated with EA / Respawn.

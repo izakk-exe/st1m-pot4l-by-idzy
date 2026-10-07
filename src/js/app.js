@@ -749,6 +749,7 @@
     try { if (window.stApi && window.stApi.bgVideo) ST.bgVideoUrl = (await window.stApi.bgVideo()) || null; } catch (e) {}
     applyBg(); render();
     refreshGameInfo();
+    if (window.stApi && window.stApi.updateAuto) setTimeout(() => window.stApi.updateAuto(ST.lang).catch(() => {}), 6000);
     if (ST.hub) ST.hub.load();
     if (S.ov.on && window.stApi && window.stApi.overlaySet) window.stApi.overlaySet(S.ov);
     ST.S = S; // handy for debugging

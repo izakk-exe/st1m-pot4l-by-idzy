@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld('stApi', {
   // movement lab
   hubBundled: () => ipcRenderer.invoke('hub:bundled'),
   updateCheck: (lang) => ipcRenderer.invoke('update:check', lang),
+  updateAuto: (lang) => ipcRenderer.invoke('update:auto', lang),
   // keyboard / mouse overlay
   overlaySet: (cfg) => ipcRenderer.invoke('overlay:set', cfg),
   onOverlayState: (cb) => ipcRenderer.on('overlay:state', (_e, cfg) => cb(cfg)),

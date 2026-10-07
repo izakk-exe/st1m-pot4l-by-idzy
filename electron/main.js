@@ -294,6 +294,8 @@ async function checkForUpdate(lang, silent) {
   } catch (e) { return { message: (silent ? '' : T2(lang, 'Échec de la vérification : ', 'Update check failed: ')) + (e.message || e) }; }
 }
 ipcMain.handle('update:check', (_e, lang) => checkForUpdate(lang, false));
+// silent check shortly after start-up: nothing is shown unless a newer version exists (then the usual "Download / Later" dialog)
+ipcMain.handle('update:auto', (_e, lang) => checkForUpdate(lang === 'fr' ? 'fr' : 'en', true));
 
 // =============================================================== keyboard / mouse overlay
 let ov = null;        // overlay BrowserWindow

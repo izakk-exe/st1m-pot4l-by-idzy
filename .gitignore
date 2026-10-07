@@ -5,5 +5,3 @@ dist/
 # generated voice-over WAVs (regenerate with tools/intro-video/vo/make-vo.ps1)
 tools/intro-video/vo/intro/
 tools/intro-video/vo/tiktok/
-# third-party background footage supplied by the app owner: keep local, never publish
-src/previews/home-bg.mp4
