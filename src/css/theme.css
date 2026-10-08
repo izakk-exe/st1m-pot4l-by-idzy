@@ -319,3 +319,7 @@ body[data-tab=home] .h-shade { display: none; }
   .brand, .side-foot, .navsec { display: none; }
   .nav { flex: none; }
 }
+
+/* links on dark glass: readable gold instead of the default blue */
+a { color: var(--gold-2); }
+a.btn, .side-foot a { color: inherit; }
