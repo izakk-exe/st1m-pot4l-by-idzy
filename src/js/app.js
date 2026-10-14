@@ -22,7 +22,7 @@
     ov: Object.assign({ on: false, auto: true, anchor: 'bl', ox: 0, oy: 0, scale: 1, opacity: 1, color: '#7cff3a', ring: true, glow: true, shift: false, ctrl: false, space: false, mouse: false, wheel: false, timeline: false, m45: false }, store.get('overlay', {})),
     game: Object.assign({ mode: 'steam', exe: '', useOpts: true }, store.get('game', {})), gameInfo: null,
   };
-  ST.ui = { S, store, esc, L, render: () => render(), toast: (m, o) => toast(m, o), copy: (t) => copy(t), dialog: (h) => dialog(h), closeDialog: () => closeDialog(), oneClick: (st) => oneClick(st), applyChanges: () => applyChanges(), changes: () => changes(), mergeState: (st) => mergeState(st), launchGame: (x) => launchGame(x), draft: () => S.draft };
+  ST.ui = { S, store, esc, L, render: () => render(), toast: (m, o) => toast(m, o), copy: (t) => copy(t), dialog: (h) => dialog(h), closeDialog: () => closeDialog(), oneClick: (st) => oneClick(st), applyChanges: () => applyChanges(), changes: () => changes(), mergeState: (st) => mergeState(st), launchGame: (x) => launchGame(x), draft: () => S.draft, reload: async () => { await reload(); render(); } };
   ST.packs = { apply: (id) => { const q = ST.QUICK_BINDS.find((x) => x.id === id); return q ? oneClick({ values: {}, binds: q.binds }) : null; } };
   ST.lang = store.get('lang', 'en'); // English by default; the language switch is in System → Appearance
 
@@ -352,7 +352,7 @@
     const files = ['video', 'profile', 'settings'];
     const fname = { video: 'videoconfig.txt', profile: 'profile.cfg', settings: 'settings.cfg' };
     const demo = S.be.kind === 'demo' && !window.stApi;
-    const nav = [['me', L('Mon profil', 'My profile')], ['ladder', 'Top Predator'], ['pros', L('Profils de pros', 'Pro profiles')], ['stretch', L('Résolution étirée', 'Stretched res')], ['techs', L('Catalogue', 'Catalogue')], ['training', L('Entraînement', 'Training')]];
+    const nav = [['me', L('Mon profil', 'My profile')], ['ladder', 'Top Predator'], ['pros', L('Profils de pros', 'Pro profiles')], ['stretch', L('Résolution étirée', 'Stretched res')], ['optim', L('Opti PC', 'PC optimisation')], ['techs', L('Catalogue', 'Catalogue')], ['training', L('Entraînement', 'Training')]];
     return `<div class="page home">
       <div class="h-shade"></div>
       <div class="h-title par" style="--k:-14"><span class="t1">ST1M</span><span class="t2">PORT4L</span><small>${L('Ton setup Apex, en un clic', 'Your Apex setup, in one click')}</small></div>
@@ -484,7 +484,7 @@
     view.dataset.tab = document.body.dataset.tab = S.tab;
     renderSide(); renderTop(); renderPending();
     const tab = ST.TABS.find((t) => t.id === S.tab);
-    const ext = (ST.hub && ST.hub.pages[S.tab]) || (ST.trainer && ST.trainer.pages[S.tab]) || (ST.pro && ST.pro.pages[S.tab]);
+    const ext = (ST.hub && ST.hub.pages[S.tab]) || (ST.trainer && ST.trainer.pages[S.tab]) || (ST.pro && ST.pro.pages[S.tab]) || (ST.optim && ST.optim.pages[S.tab]);
     view.innerHTML = ext ? ext() : S.tab === 'home' ? pageHome() : S.tab === 'preview' ? pagePreview() : S.tab === 'overlay' ? pageOverlay() : S.tab === 'binds' ? pageBinds() : S.tab === 'launch' ? pageLaunch() : S.tab === 'profiles' ? pageProfiles() : S.tab === 'system' ? pageSystem() : pageSettings(tab);
     view.scrollTop = S.flash ? 0 : (entering ? 0 : top);
     if (S.flash) { const r = view.querySelector(`[data-row="${S.flash}"]`); if (r) { r.scrollIntoView({ block: 'center' }); r.classList.add('hit'); } S.flash = null; }
@@ -492,6 +492,7 @@
     if (ST.bgFocus) { if (S.tab === 'home') { const r = view.getBoundingClientRect(); ST.bgFocus((r.left + r.width / 2) / innerWidth, (r.top + r.height / 2) / innerHeight); } else ST.bgFocus(); }
     if (S.tab === 'training' && ST.trainer) ST.trainer.after();
     if (ST.pro && ST.pro.after) ST.pro.after();
+    if (ST.optim && ST.optim.after) ST.optim.after();
     if (S.tab === 'preview') mountTabPreview();
     if (S.tab === 'overlay') initOverlayPreview();
     if (S.tab === 'launch' && !S.gameInfo) refreshGameInfo().then(() => S.tab === 'launch' && render());

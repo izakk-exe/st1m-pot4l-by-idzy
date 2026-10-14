@@ -207,6 +207,85 @@ ipcMain.handle('display:test', (_e, w, h) => {
 ipcMain.handle('display:restore', () => stopStretch());
 ipcMain.handle('display:active', () => !!stretchProc);
 
+// =============================================================== PC optimisation (Windows tweaks + NVIDIA Profile Inspector)
+// Windows tweaks: per-user registry values and the power plan, through pc-optim.ps1. The first change of each value
+// is saved to pc-optim-backup.json, so "restore" puts every value back exactly as it was.
+function helperScript(name) {
+  const dst = path.join(app.getPath('userData'), name);
+  fs.mkdirSync(path.dirname(dst), { recursive: true });
+  fs.writeFileSync(dst, fs.readFileSync(path.join(__dirname, name), 'utf8'), 'utf8');
+  return dst;
+}
+const optimBackup = () => path.join(app.getPath('userData'), 'pc-optim-backup.json');
+const OPTIM_IDS = ['gamemode', 'dvr', 'power', 'gpupref', 'fso', 'transparency'];
+function apexExe(given) {
+  const ok = (p) => p && EXE_NAMES.includes(path.basename(p).toLowerCase()) && fs.existsSync(p);
+  if (ok(given)) return given;
+  const g = detectGame();
+  return [g.steam.exe, g.ea.exe].find(ok) || '';
+}
+function optimRun(args) {
+  return new Promise((resolve) => {
+    if (process.platform !== 'win32') return resolve({ ok: false, error: 'windows-only' });
+    execFile('powershell.exe', [...PS_ARGS, helperScript('pc-optim.ps1'), ...args, '-Backup', optimBackup()], { windowsHide: true, timeout: 30000 }, (err, out) => {
+      try { resolve(JSON.parse(String(out).trim().split(/\r?\n/).pop())); } catch (_) { resolve({ ok: false, error: err ? 'helper' : 'parse' }); }
+    });
+  });
+}
+ipcMain.handle('optim:status', async (_e, exe) => ({ ...(await optimRun(['-Action', 'status', '-Exe', apexExe(exe)])), exe: apexExe(exe) }));
+ipcMain.handle('optim:apply', (_e, list, exe) => {
+  const ids = (Array.isArray(list) ? list : []).filter((x) => OPTIM_IDS.includes(x));
+  return ids.length ? optimRun(['-Action', 'apply', '-Tweaks', ids.join(','), '-Exe', apexExe(exe)]) : { ok: true, results: {} };
+});
+ipcMain.handle('optim:restore', () => optimRun(['-Action', 'restore']));
+
+// NVIDIA Profile Inspector: the user downloads it from its official GitHub page and points the app to the exe.
+// The app writes a .nip profile for Apex Legends and imports it with -silentImport (Windows asks for admin rights).
+// Setting IDs and values are NVIDIA's own (NvApiDriverSettings.h).
+const NPI_PAGE = 'https://github.com/Orbmu2k/nvidiaProfileInspector/releases';
+const npiConf = () => path.join(app.getPath('userData'), 'npi.json');
+const npiExe = () => { try { const p = JSON.parse(fs.readFileSync(npiConf(), 'utf8')).exe; return p && fs.existsSync(p) ? p : ''; } catch (_) { return ''; } };
+const NV = {
+  AUTO_LODBIAS: 0x00638E8F, LODBIAS: 0x00738E8F, QUALITY: 0x00CE2691, TRILINEAR_OPT: 0x002ECAF2, ANISO_SAMPLE_OPT: 0x00E73211,
+  ANISO_FILTER_OPT: 0x0084CD70, ANISO_MODE: 0x10D2BB16, ANISO_LEVEL: 0x101E61A9, PRERENDER: 0x007BA09E, PSTATE: 0x1057EB71,
+};
+// LOD bias is stored in 1/8 steps: +3.0 = 24, +8.0 = 64, +15.0 = 120 (maximum blur: the "potato" look)
+const POTATO_LEVELS = { soft: 24, potato: 64, max: 120 };
+function npiProfile(level) {
+  const bias = POTATO_LEVELS[level];
+  const on = bias !== undefined;
+  const set = on
+    ? [[NV.AUTO_LODBIAS, 0], [NV.LODBIAS, bias], [NV.QUALITY, 0x14], [NV.TRILINEAR_OPT, 1], [NV.ANISO_SAMPLE_OPT, 1], [NV.ANISO_FILTER_OPT, 1], [NV.ANISO_MODE, 1], [NV.ANISO_LEVEL, 1], [NV.PRERENDER, 1], [NV.PSTATE, 1]]
+    : [[NV.AUTO_LODBIAS, 1], [NV.LODBIAS, 0], [NV.QUALITY, 0], [NV.TRILINEAR_OPT, 0], [NV.ANISO_SAMPLE_OPT, 0], [NV.ANISO_FILTER_OPT, 0], [NV.ANISO_MODE, 0], [NV.ANISO_LEVEL, 1], [NV.PRERENDER, 0], [NV.PSTATE, 0]];
+  const rows = set.map(([id, v]) => `      <ProfileSetting>\r\n        <SettingNameInfo> </SettingNameInfo>\r\n        <SettingID>${id >>> 0}</SettingID>\r\n        <SettingValue>${v >>> 0}</SettingValue>\r\n        <ValueType>Dword</ValueType>\r\n      </ProfileSetting>`).join('\r\n');
+  return `<?xml version="1.0" encoding="utf-16"?>\r\n<ArrayOfProfile>\r\n  <Profile>\r\n    <ProfileName>Apex Legends</ProfileName>\r\n    <Executeables>\r\n      <string>r5apex.exe</string>\r\n      <string>r5apex_dx12.exe</string>\r\n    </Executeables>\r\n    <Settings>\r\n${rows}\r\n    </Settings>\r\n  </Profile>\r\n</ArrayOfProfile>\r\n`;
+}
+function npiImport(level) {
+  const exe = npiExe();
+  if (!exe) return Promise.resolve({ ok: false, error: 'no-npi' });
+  const nip = path.join(app.getPath('userData'), level in POTATO_LEVELS ? 'apex-potato.nip' : 'apex-restore.nip');
+  fs.writeFileSync(nip, '﻿' + npiProfile(level), 'utf16le');
+  const q = (s) => "'" + String(s).replace(/'/g, "''") + "'";
+  const cmd = `try { $p = Start-Process -FilePath ${q(exe)} -ArgumentList @('-silentImport', '"${nip.replace(/'/g, "''")}"') -Verb RunAs -Wait -PassThru -ErrorAction Stop; '{"ok":true,"code":' + $p.ExitCode + '}' } catch { '{"ok":false,"error":"cancelled"}' }`;
+  return new Promise((resolve) => {
+    execFile('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', cmd], { windowsHide: true, timeout: 120000 }, (err, out) => {
+      try { resolve(JSON.parse(String(out).trim().split(/\r?\n/).pop())); } catch (_) { resolve({ ok: false, error: 'helper' }); }
+    });
+  });
+}
+ipcMain.handle('npi:status', () => ({ exe: npiExe() }));
+ipcMain.handle('npi:pick', async () => {
+  const r = await dialog.showOpenDialog(win, { properties: ['openFile'], filters: [{ name: 'nvidiaProfileInspector', extensions: ['exe'] }], title: 'nvidiaProfileInspector.exe' });
+  if (r.canceled || !r.filePaths[0]) return null;
+  const p = r.filePaths[0];
+  if (!/nvidiaprofileinspector/i.test(path.basename(p))) return { error: 'not-npi' };
+  fs.writeFileSync(npiConf(), JSON.stringify({ exe: p }), 'utf8');
+  return { exe: p };
+});
+ipcMain.handle('npi:apply', (_e, level) => (level in POTATO_LEVELS ? npiImport(level) : { ok: false, error: 'level' }));
+ipcMain.handle('npi:restore', () => npiImport('restore'));
+ipcMain.handle('npi:download', () => shell.openExternal(NPI_PAGE).then(() => true));
+
 // =============================================================== background video (the user's own file, kept in userData — never shipped with the app)
 const bgVideoFile = () => path.join(app.getPath('userData'), 'background-video.mp4');
 const bgVideoUrl = () => { try { const p = bgVideoFile(); return fs.existsSync(p) ? pathToFileURL(p).href + '?v=' + Math.round(fs.statSync(p).mtimeMs) : null; } catch (_) { return null; } };

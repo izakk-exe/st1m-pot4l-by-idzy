@@ -20,6 +20,15 @@ contextBridge.exposeInMainWorld('stApi', {
   displayRestore: () => ipcRenderer.invoke('display:restore'),
   displayActive: () => ipcRenderer.invoke('display:active'),
   onDisplayRestored: (cb) => ipcRenderer.on('display:restored', () => cb()),
+  // PC optimisation
+  optimStatus: (exe) => ipcRenderer.invoke('optim:status', exe),
+  optimApply: (list, exe) => ipcRenderer.invoke('optim:apply', list, exe),
+  optimRestore: () => ipcRenderer.invoke('optim:restore'),
+  npiStatus: () => ipcRenderer.invoke('npi:status'),
+  npiPick: () => ipcRenderer.invoke('npi:pick'),
+  npiApply: (level) => ipcRenderer.invoke('npi:apply', level),
+  npiRestore: () => ipcRenderer.invoke('npi:restore'),
+  npiDownload: () => ipcRenderer.invoke('npi:download'),
   // background video
   bgVideo: () => ipcRenderer.invoke('bg:video'),
   bgPickVideo: () => ipcRenderer.invoke('bg:pickVideo'),

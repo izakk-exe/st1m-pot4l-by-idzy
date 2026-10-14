@@ -55,6 +55,7 @@
       { id: 'ladder', icon: '♛', fr: 'Top Predator', en: 'Top Predator' },
       { id: 'pros', icon: '✪', fr: 'Profils de pros', en: 'Pro profiles' },
       { id: 'stretch', icon: '⬌', fr: 'Résolution étirée', en: 'Stretched res' },
+      { id: 'optim', icon: '⇮', fr: 'Opti PC', en: 'PC optimisation' },
     ];
     ST.TABS = ST.TABS.filter((t) => t.sec === 'main').concat(comp.map((t) => Object.assign({ sec: 'comp' }, t)), ST.TABS.filter((t) => t.sec !== 'main'));
     ST.SECTIONS = { comp: ['COMPÉTITION', 'COMPETITION'], lab: ['MOVEMENT LAB', 'MOVEMENT LAB'], cfg: ['CONFIGURATION', 'CONFIGURATION'] };
