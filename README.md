@@ -5,7 +5,8 @@
 ### The **Apex Legends** config editor that unlocks what the game hides — with **pro profiles**, **stretched resolution without black bars** and a **movement** hub.
 
 <a href="https://github.com/izakk-exe/st1m-pot4l-by-idzy/releases/latest"><img src="https://img.shields.io/badge/%E2%AC%87%20DOWNLOAD-f5c542?style=for-the-badge&labelColor=000000" alt="Download"></a>
-<a href="https://izakk-exe.github.io/st1m-pot4l-by-idzy/"><img src="https://img.shields.io/badge/%E2%96%B6%20WEB%20DEMO-ffffff?style=for-the-badge&labelColor=000000" alt="Web demo"></a>
+<a href="https://izakk-exe.github.io/st1m-pot4l-by-idzy/"><img src="https://img.shields.io/badge/%F0%9F%8C%90%20WEBSITE-f2c24a?style=for-the-badge" alt="Website"></a>
+<a href="https://izakk-exe.github.io/st1m-pot4l-by-idzy/demo/"><img src="https://img.shields.io/badge/%E2%96%B6%20WEB%20DEMO-ffffff?style=for-the-badge&labelColor=000000" alt="Web demo"></a>
 
 <img src="https://img.shields.io/github/v/release/izakk-exe/st1m-pot4l-by-idzy?style=flat-square&color=f5c542&labelColor=0a0a0a" alt="version">
 <img src="https://img.shields.io/github/downloads/izakk-exe/st1m-pot4l-by-idzy/total?style=flat-square&color=f5c542&labelColor=0a0a0a" alt="downloads">

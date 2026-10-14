@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ST1M PORT4L — the Apex Legends config launcher</title>
+<meta name="description" content="ST1M PORT4L: the free Apex Legends config editor with pro profiles, stretched resolution without black bars and a movement lab. Download for Windows.">
+<meta property="og:title" content="ST1M PORT4L — the Apex Legends config launcher">
+<meta property="og:description" content="Pro profiles, stretched res without black bars, 287 movement techniques. Free, open source.">
+<meta property="og:image" content="https://izakk-exe.github.io/st1m-pot4l-by-idzy/img/og.png">
+<meta property="og:url" content="https://izakk-exe.github.io/st1m-pot4l-by-idzy/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#120c2a">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Rubik+Spray+Paint&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body class="loading">
+
+<!-- preloader -->
+<div id="loader" aria-hidden="true">
+  <svg class="loader-ring" viewBox="0 0 200 280"><ellipse cx="100" cy="140" rx="78" ry="118" pathLength="100"/><ellipse class="p" cx="100" cy="140" rx="78" ry="118" pathLength="100"/></svg>
+  <div class="loader-num"><b id="loaderNum">0</b><span>%</span></div>
+  <div class="loader-txt mono">[ OPENING PORTAL ]</div>
+</div>
+
+<div id="progress" aria-hidden="true"></div>
+<div id="cursor" aria-hidden="true"><i></i><span></span></div>
+<canvas id="wraith" aria-hidden="true"></canvas>
+<div id="grain" aria-hidden="true"></div>
+
+<!-- nav -->
+<header id="nav">
+  <a class="brand" href="#top" data-magnet><img src="img/logo.svg" alt="" width="34" height="34"><b>ST1M PORT4L</b></a>
+  <nav class="mono">
+    <a href="#features" data-i18n="nav1">[ Features ]</a>
+    <a href="#movement" data-i18n="nav2">[ Movement Lab ]</a>
+    <a href="#steps" data-i18n="nav3">[ 3 clicks ]</a>
+    <a href="#trust" data-i18n="nav4">[ Trust ]</a>
+  </nav>
+  <div class="nav-r">
+    <button id="lang" class="mono" type="button" aria-label="Language"><span data-l="en">EN</span><i>/</i><span data-l="fr">FR</span></button>
+    <a class="pill" href="#download" data-magnet data-i18n="navdl">Download</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section id="hero">
+  <div class="hero-bg" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+  <h1 class="giant" id="giant" aria-label="ST1M PORT4L"><span class="g-w">ST1M</span><span class="g-w">PORT4L</span></h1>
+  <div class="giant ghost" aria-hidden="true"><span class="g-w">ST1M</span><span class="g-w">PORT4L</span></div>
+  <img class="hero-fallback" src="img/logo.svg" alt="">
+
+  <div class="hero-ui">
+    <div class="hero-l">
+      <p class="mono tag" data-i18n="htag">[ Config editor · Apex Legends ] &nbsp; [ S-tier setup ]</p>
+      <h2 class="hero-h" data-split data-i18n="hh">Your Apex setup, through the void.</h2>
+      <p class="hero-p" data-i18n="hp">Unlock what the game hides: pro profiles, stretched res without black bars and a full movement lab — in one launcher.</p>
+      <dl class="specs mono">
+        <div><dt data-i18n="s1">Version</dt><dd><u data-ver>1.2.4</u><span>Setup</span><span>Portable</span></dd></div>
+        <div><dt data-i18n="s2">System</dt><dd><u>Windows 10</u><u>11</u></dd></div>
+        <div><dt data-i18n="s3">Price</dt><dd><u data-i18n="s3v">Free</u><span data-i18n="s3w">Open source</span></dd></div>
+      </dl>
+      <a class="cta" href="https://github.com/izakk-exe/st1m-pot4l-by-idzy/releases/latest" data-dl="setup" data-magnet data-cursor="DL">
+        <span class="cta-o"><svg viewBox="0 0 24 24"><path d="M12 4v14M6 12l6 6 6-6"/></svg></span>
+        <span class="cta-t mono"><small data-i18n="cta1">Download for Windows</small><b><span data-i18n="cta2">Free</span> · v<span data-ver>1.2.4</span></b></span>
+      </a>
+    </div>
+
+    <div class="hero-r">
+      <div class="shots" id="shots">
+        <div class="shot main chamfer"></div>
+        <div class="shot next chamfer"></div>
+      </div>
+      <div class="shots-meta mono"><span id="shotCur">01</span><i><b id="shotBar"></b></i><span id="shotTot">08</span></div>
+      <p class="mono shots-cap" id="shotCap">Home</p>
+    </div>
+  </div>
+
+  <div class="hero-foot mono">
+    <span class="scrollhint"><i></i><span data-i18n="scroll">Scroll</span></span>
+    <span class="coords">[ PROTOCOL : VOID // 48.8566°N ]</span>
+    <span class="socials">
+      <a href="https://github.com/izakk-exe/st1m-pot4l-by-idzy" target="_blank" rel="noopener" aria-label="GitHub" data-magnet><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.100-1.400-1.100-1.400-.9-.6.1-.6.1-.6 1 .1 1.500 1 1.500 1 .9 1.500 2.300 1.100 2.900.8.1-.6.300-1.100.6-1.300-2.200-.3-4.600-1.100-4.600-5a3.900 3.900 0 0 1 1-2.700 3.600 3.600 0 0 1 .1-2.700s.8-.3 2.700 1a9.400 9.400 0 0 1 5 0c1.900-1.300 2.700-1 2.700-1 .5 1.300.2 2.300.1 2.700a3.900 3.900 0 0 1 1 2.700c0 3.900-2.300 4.700-4.600 5 .4.3.7.9.7 1.900V21c0 .3.200.6.700.5A10 10 0 0 0 12 2Z"/></svg></a>
+      <a href="https://ko-fi.com/idzyy" target="_blank" rel="noopener" aria-label="Ko-fi" data-magnet><svg viewBox="0 0 24 24"><path d="M4 7h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7Zm13 1h1.500a2.500 2.500 0 0 1 0 5H17" fill="none" stroke="currentColor" stroke-width="1.800"/></svg></a>
+    </span>
+  </div>
+</section>
+
+<!-- marquee -->
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track"><span>FOV 120</span><i>✦</i><span>STRETCHED RES</span><i>✦</i><span>PRO PROFILES</span><i>✦</i><span>SUPERGLIDE TRAINER</span><i>✦</i><span>TAP STRAFE</span><i>✦</i><span>NO MACROS</span><i>✦</i><span>FOV 120</span><i>✦</i><span>STRETCHED RES</span><i>✦</i><span>PRO PROFILES</span><i>✦</i><span>SUPERGLIDE TRAINER</span><i>✦</i><span>TAP STRAFE</span><i>✦</i><span>NO MACROS</span><i>✦</i></div>
+</div>
+
+<!-- ================= FEATURES ================= -->
+<section id="features" class="sec">
+  <div class="sec-head">
+    <h2 class="h-xl" data-split data-i18n="fh">What's inside</h2>
+    <p class="mono meta" data-reveal>[ Loadout ]<br>[ Season_v1.2 ]<br>[ 09 modules ]</p>
+    <p class="mono meta" data-reveal data-i18n="fmeta">Config editor<br>Competition tools<br>Movement lab<br>Zero injection</p>
+    <div class="filters mono" data-reveal>
+      <button class="on" data-f="all" data-i18n="f0">All</button>
+      <button data-f="config">Config</button>
+      <button data-f="comp" data-i18n="f2">Ranked</button>
+      <button data-f="move">Movement</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid">
+    <article class="card feat chamfer" data-cat="config" data-full="img/config.jpg" data-cursor="+">
+      <img src="img/config.jpg" alt="Config editor screenshot" loading="lazy">
+      <span class="spray" aria-hidden="true">VOID</span>
+      <div class="feat-t">
+        <h3>Config&nbsp;editor<sup>™</sup></h3>
+        <p data-i18n="c0d">40+ settings Apex's menu won't show you. Review every change before it lands, undo any of them.</p>
+        <span class="mini-o"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+      </div>
+    </article>
+
+    <article class="card" data-cat="comp" data-full="img/pros.jpg" data-cursor="+">
+      <div class="fig chamfer"><img src="img/pros.jpg" alt="" loading="lazy"><b class="no mono">01</b></div>
+      <h3 class="mono" data-i18n="c1t">Pro profiles</h3>
+      <p class="mono" data-i18n="c1d">15 keyboard &amp; mouse setups — Faide, iiTzTimmy, YukaF…</p>
+      <span class="dots mono"><i class="d1"></i><span data-i18n="f2">Ranked</span></span>
+    </article>
+    <article class="card" data-cat="comp" data-full="img/stretch.jpg" data-cursor="+">
+      <div class="fig chamfer"><img src="img/stretch.jpg" alt="" loading="lazy"><b class="no mono">02</b></div>
+      <h3 class="mono" data-i18n="c2t">Stretched res</h3>
+      <p class="mono" data-i18n="c2d">4:3 / 16:10 without black bars. No Steam command.</p>
+      <span class="dots mono"><i class="d1"></i><span data-i18n="f2">Ranked</span></span>
+    </article>
+    <article class="card" data-cat="config" data-full="img/apercu.jpg" data-cursor="+">
+      <div class="fig chamfer"><img src="img/apercu.jpg" alt="" loading="lazy"><b class="no mono">03</b></div>
+      <h3 class="mono" data-i18n="c3t">Before / after</h3>
+      <p class="mono" data-i18n="c3d">Compare each setting on real in-game captures.</p>
+      <span class="dots mono"><i class="d2"></i>Config</span>
+    </article>
+    <article class="card" data-cat="move" data-full="img/catalogue.jpg" data-cursor="+">
+      <div class="fig chamfer"><img src="img/catalogue.jpg" alt="" loading="lazy"><b class="no mono">04</b></div>
+      <h3 class="mono" data-i18n="c4t">Movement catalogue</h3>
+      <p class="mono" data-i18n="c4d">287 techniques, shown with your own keys.</p>
+      <span class="dots mono"><i class="d3"></i>Movement</span>
+    </article>
+    <article class="card" data-cat="move" data-full="img/training.jpg" data-cursor="+">
+      <div class="fig chamfer"><img src="img/training.jpg" alt="" loading="lazy"><b class="no mono">05</b></div>
+      <h3 class="mono" data-i18n="c5t">Superglide trainer</h3>
+      <p class="mono" data-i18n="c5d">Jump → crouch gap measured in frames.</p>
+      <span class="dots mono"><i class="d3"></i>Movement</span>
+    </article>
+    <article class="card" data-cat="move" data-full="img/binds.jpg" data-cursor="+">
+      <div class="fig chamfer"><img src="img/binds.jpg" alt="" loading="lazy"><b class="no mono">06</b></div>
+      <h3 class="mono" data-i18n="c6t">Bind packs</h3>
+      <p class="mono" data-i18n="c6d">Tap strafe, scroll jump… one click, no macros.</p>
+      <span class="dots mono"><i class="d3"></i>Movement</span>
+    </article>
+    <article class="card" data-cat="comp" data-full="img/me.jpg" data-cursor="+">
+      <div class="fig chamfer"><img src="img/me.jpg" alt="" loading="lazy"><b class="no mono">07</b></div>
+      <h3 class="mono" data-i18n="c7t">Road to Predator</h3>
+      <p class="mono" data-i18n="c7d">Rank, RP history and the gap to the cut-off.</p>
+      <span class="dots mono"><i class="d1"></i><span data-i18n="f2">Ranked</span></span>
+    </article>
+    <article class="card" data-cat="move" data-full="img/parcours.jpg" data-cursor="+">
+      <div class="fig chamfer"><img src="img/parcours.jpg" alt="" loading="lazy"><b class="no mono">08</b></div>
+      <h3 class="mono" data-i18n="c8t">Learning path</h3>
+      <p class="mono" data-i18n="c8d">6 stages, XP and badges: Rookie → Apex Mover.</p>
+      <span class="dots mono"><i class="d3"></i>Movement</span>
+    </article>
+  </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<section class="stats">
+  <div data-reveal><b data-count="287">0</b><span class="mono" data-i18n="st1">movement techniques</span></div>
+  <div data-reveal style="--d:.08s"><b data-count="40" data-suffix="+">0</b><span class="mono" data-i18n="st2">hidden settings</span></div>
+  <div data-reveal style="--d:.16s"><b data-count="15">0</b><span class="mono" data-i18n="st3">pro profiles</span></div>
+  <div data-reveal style="--d:.24s"><b data-count="0">0</b><span class="mono" data-i18n="st4">macros · ads · accounts</span></div>
+</section>
+
+<!-- ================= MOVEMENT ================= -->
+<section id="movement" class="sec split">
+  <div class="split-l">
+    <p class="mono tag" data-reveal>[ 02 — Movement Lab ]</p>
+    <h2 class="h-xl" data-split data-i18n="mh">Move like you phase.</h2>
+    <p class="lead" data-reveal data-i18n="mp">A catalogue of 287 techniques, a learning path, and trainers that measure your real inputs. They read — they never send anything to the game.</p>
+    <ul class="list">
+      <li data-reveal><b class="mono">01</b><div><h4 data-i18n="m1t">Superglide trainer</h4><p data-i18n="m1d">Frame-accurate gap, success chance and the reason you missed.</p></div></li>
+      <li data-reveal><b class="mono">02</b><div><h4 data-i18n="m2t">Tap strafe &amp; jump rhythm</h4><p data-i18n="m2d">Wheel cadence in ticks per second, bunny-hop timing.</p></div></li>
+      <li data-reveal><b class="mono">03</b><div><h4 data-i18n="m3t">Keyboard &amp; mouse overlay</h4><p data-i18n="m3d">W A S D light up in game, a dot follows your aim. Ctrl + Shift + O.</p></div></li>
+      <li data-reveal><b class="mono">04</b><div><h4 data-i18n="m4t">Legends quiz</h4><p data-i18n="m4d">Each legend's mobility — find the one that fits you.</p></div></li>
+    </ul>
+  </div>
+  <div class="split-r">
+    <figure class="frame chamfer" data-par="-.06" data-tilt>
+      <img src="img/superglide-trainer.gif" alt="Superglide trainer in action" loading="lazy" width="760" height="428">
+      <figcaption class="mono">[ REC ] superglide_trainer.exe</figcaption>
+    </figure>
+    <div class="overlay-demo" id="keys" data-par=".08">
+      <p class="mono" data-i18n="kd">Try it — press W A S D</p>
+      <div class="ring"><i id="aimDot"></i>
+        <kbd data-k="w">W</kbd><kbd data-k="a">A</kbd><kbd data-k="s">S</kbd><kbd data-k="d">D</kbd>
+      </div>
+      <div class="row"><kbd data-k="shift" class="wide">Shift</kbd><kbd data-k="control" class="wide">Ctrl</kbd><kbd data-k=" " class="xwide">Space</kbd></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STEPS ================= -->
+<section id="steps" class="sec">
+  <div class="sec-head">
+    <h2 class="h-xl" data-split data-i18n="sh">In three clicks</h2>
+    <p class="mono meta" data-reveal>[ 03 — Deploy ]<br>[ ~ 40 sec ]</p>
+  </div>
+  <ol class="steps">
+    <li data-reveal><b>01</b><h3 data-i18n="p1t">Download</h3><p data-i18n="p1d">Grab the installer. It checks for updates by itself.</p></li>
+    <li data-reveal style="--d:.12s"><b>02</b><h3 data-i18n="p2t">Close Apex</h3><p data-i18n="p2d">Launch ST1M PORT4L — it finds your config on its own.</p></li>
+    <li data-reveal style="--d:.24s"><b>03</b><h3 data-i18n="p3t">Apply the setup</h3><p data-i18n="p3d">FOV 120, tuned shadows and textures. Backup made, Undo within reach.</p></li>
+  </ol>
+</section>
+
+<!-- ================= TRUST ================= -->
+<section id="trust" class="sec trust">
+  <div class="sec-head">
+    <h2 class="h-xl" data-split data-i18n="th">Nothing to hide</h2>
+    <p class="mono meta" data-reveal>[ 04 — Trust ]<br>[ MIT licence ]</p>
+  </div>
+  <div class="trust-grid">
+    <div data-reveal><b class="mono">A</b><h4 data-i18n="t1t">No account, no tracking</h4><p data-i18n="t1d">The only calls go to GitHub for updates and news — and to the stats API if you add your own key.</p></div>
+    <div data-reveal style="--d:.08s"><b class="mono">B</b><h4 data-i18n="t2t">Automatic backups</h4><p data-i18n="t2d">Before every change to your files, with one-click restore.</p></div>
+    <div data-reveal style="--d:.16s"><b class="mono">C</b><h4 data-i18n="t3t">Zero injection</h4><p data-i18n="t3d">The app edits config files and nothing else. Every key triggers one normal in-game command.</p></div>
+    <div data-reveal style="--d:.24s"><b class="mono">D</b><h4 data-i18n="t4t">Open source</h4><p data-i18n="t4d">Every line is readable on GitHub, PowerShell helpers included.</p></div>
+  </div>
+</section>
+
+<!-- ================= DOWNLOAD ================= -->
+<section id="download">
+  <div class="dl-in">
+    <p class="mono tag" data-reveal>[ 05 — Drop in ]</p>
+    <h2 class="h-xxl" data-split data-i18n="dh">Enter the portal</h2>
+    <p class="lead" data-reveal data-i18n="dp">Free, ad-free and it will stay that way. Windows 10 / 11.</p>
+    <div class="dl-btns" data-reveal>
+      <a class="btn gold" href="https://github.com/izakk-exe/st1m-pot4l-by-idzy/releases/latest" data-dl="setup" data-magnet data-cursor="DL">
+        <svg viewBox="0 0 24 24"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+        <span><b data-i18n="d1">Installer</b><small class="mono">ST1M-PORT4L-Setup-<span data-ver>1.2.4</span>.exe</small></span>
+      </a>
+      <a class="btn" href="https://github.com/izakk-exe/st1m-pot4l-by-idzy/releases/latest" data-dl="portable" data-magnet data-cursor="DL">
+        <svg viewBox="0 0 24 24"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+        <span><b data-i18n="d2">Portable</b><small class="mono" data-i18n="d2s">No install, no auto-update</small></span>
+      </a>
+    </div>
+    <p class="mono dl-count" id="dlCount" hidden></p>
+    <p class="note" data-reveal data-i18n="dn"><b>"Windows protected your PC"?</b> Expected — the app is unsigned. Click <i>More info → Run anyway</i>. All the code is public.</p>
+    <p class="mono links" data-reveal>
+      <a href="demo/" target="_blank" rel="noopener" data-i18n="l1">▶ Try the web demo</a>
+      <a href="https://github.com/izakk-exe/st1m-pot4l-by-idzy" target="_blank" rel="noopener">↗ GitHub</a>
+      <a href="https://ko-fi.com/idzyy" target="_blank" rel="noopener" data-i18n="l3">☕ Support on Ko-fi</a>
+    </p>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="foot">
+  <span class="spray big" aria-hidden="true" data-par=".12">PHASE</span>
+  <div class="foot-top mono">
+    <p data-i18n="fo1">ST1M PORT4L was born<br>in the firing range,<br>not in a boardroom.</p>
+    <p class="r" data-i18n="fo2">For those who climb.<br>Not for the crowd.</p>
+  </div>
+  <div class="foot-big">
+    <h2 data-split data-i18n="fb1">Built for movement</h2>
+    <h2 data-split data-i18n="fb2">Made for ranked</h2>
+    <h2 data-split data-i18n="fb3">Free forever</h2>
+  </div>
+  <div class="foot-bot mono">
+    <p data-i18n="fo3">Community project by idZy — not affiliated with EA or Respawn. Apex Legends and Wraith are trademarks of their owners. The 3D figure is an original fan illustration. Editing config files is at your own risk.</p>
+    <div class="barcode" aria-hidden="true"></div>
+  </div>
+</footer>
+</main>
+
+<div id="lightbox" hidden><img alt=""><button class="mono" type="button">[ ESC ]</button></div>
+
+<script src="js/site.js" defer></script>
+<script type="module" src="js/wraith.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-name: Web demo (GitHub Pages)
+name: Website + web demo (GitHub Pages)
 on:
   push: { branches: [main] }
   workflow_dispatch:
@@ -10,7 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Assemble site (landing page at root, app demo under /demo/)
+        run: |
+          mkdir -p _site/demo
+          cp -r site/. _site/
+          cp -r src/. _site/demo/
+          touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
-        with: { path: src }
+        with: { path: _site }
       - id: d
         uses: actions/deploy-pages@v4
