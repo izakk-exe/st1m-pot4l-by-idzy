@@ -1,4 +1,4 @@
-/* ST1M PORT4L landing — page interactions (the 3D figure lives in wraith.js). */
+/* ST1M PORT4L landing — page interactions (the 3D logo lives in logo3d.js). */
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -50,7 +50,7 @@
     l1: '▶ Essayer la démo web', l3: '☕ Soutenir sur Ko-fi',
     fo1: 'ST1M PORT4L est né<br>au stand de tir,<br>pas en salle de réunion.', fo2: 'Pour ceux qui grimpent.<br>Pas pour la foule.',
     fb1: 'Pensé pour le movement', fb2: 'Taillé pour la ranked', fb3: 'Gratuit pour toujours',
-    fo3: "Projet communautaire par idZy — non affilié à EA ni à Respawn. Apex Legends et Wraith sont des marques de leurs propriétaires. La figurine 3D est une illustration de fan originale. Modifier des fichiers de config se fait à tes risques."
+    fo3: "Projet communautaire par idZy — non affilié à EA ni à Respawn. Apex Legends est une marque de ses propriétaires. Modifier des fichiers de config se fait à tes risques."
   };
   const EN = {};
   $$('[data-i18n]').forEach(el => { EN[el.dataset.i18n] ??= el.innerHTML; });
